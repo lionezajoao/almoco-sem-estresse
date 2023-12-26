@@ -16,7 +16,10 @@ class Database:
 
     def query(self, query, params=None):
         self.cur.execute(query, params)
-        return self.cur.fetchall()
+        try:
+            return self.cur.fetchall()
+        except:
+            return None
     
     def insert(self, query, params=None):
         self.cur.execute(query, params)

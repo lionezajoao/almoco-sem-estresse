@@ -8,6 +8,9 @@ class MenuLib(MenuDatabase):
     def get_all_entries(self):
         return self.get_menu()
     
+    def get_all_ingredients(self):
+        return self.get_ingredients()
+    
     def get_data_by_name(self, name):
         return self.get_item_by_name(name)
     

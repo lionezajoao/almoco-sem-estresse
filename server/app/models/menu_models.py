@@ -7,9 +7,9 @@ class MenuItemModel(BaseModel):
 
 class IngredientsModel(BaseModel):
     name: str
-    type: str
+    type: Optional[str] = None # Optional for existing ingredients. Required for new ingredients
 
 class MenuItemIngredientsModel(BaseModel):
     name: str
-    ingredients: List[str or IngredientsModel] # For new ingredients, use the IngredientsModel. For existing ingredients, use the string.
+    ingredients: List[IngredientsModel]
     type: Optional[str] = None # For detailed menu items, use this field. For simple menu items, leave this field blank.

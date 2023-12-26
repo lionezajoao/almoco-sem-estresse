@@ -5,54 +5,57 @@ class MenuDatabase(Database):
         super().__init__()
 
     def get_menu(self):
-        query = "SELECT * FROM main_menu;"
+        query = "SELECT name, type FROM items;"
+        return self.query(query)
+    
+    def get_ingredients(self):
+        query = "SELECT name, type FROM ingredients;"
         return self.query(query)
     
     def get_item_by_name(self, name: str) -> list:
-        query = "SELECT * FROM main_menu WHERE name = %s"
+        query = "SELECT name, type FROM items WHERE name = %s"
         params = (name,)
-        return self.query(query, params)
+        result = self.query(query, params)
+        if result:
+            return dict(zip(('name', 'type'), result[0]))
+        return result
     
     def get_ingredients_by_name(self, name: str) -> list:
-        query = "SELECT * FROM items WHERE name = %s"
+        query = "SELECT name, type FROM ingredients WHERE name = %s"
         params = (name,)
-        return self.query(query, params)
+        data = self.query(query, params)
+        if data:
+            return dict(zip(('name', 'type'), data[0]))
+        return data
     
     def check_if_item_exists(self, name: str) -> bool:
-        return False
-        try:
-            self.get_item_by_name(name)
+        if self.get_item_by_name(name):
             return True
-        except:
-            return False
     
     def check_if_ingredient_exists(self, name: str) -> bool:
-        try:
-            self.get_ingredients_by_name(name)
+        if self.get_ingredients_by_name(name):
             return True
-        except:
-            return False
 
     def get_item_ingredients(self, name: str) -> list:
         query = """
-        select name from items
+        select name from ingredients
         where _id in (
-            select item_id from menu_items
+            select item_id from item_ingredients
             where menu_id = (
                 select _id
-                from main_menu where name = %s));"""
+                from items where name = %s));"""
         
         params = (name,)
         result = self.query(query, params)
         return [row[0] for row in result]
     
     def insert_item(self, name: str):
-        query = "INSERT INTO main_menu (name) VALUES (%s)"
+        query = "INSERT INTO items (name) VALUES (%s)"
         params = (name,)
         self.insert(query, params)
 
     def insert_ingredient(self, name: str):
-        query = "INSERT INTO items (name) VALUES (%s)"
+        query = "INSERT INTO ingredients (name) VALUES (%s)"
         params = (name,)
         self.insert(query, params)
 
@@ -60,8 +63,8 @@ class MenuDatabase(Database):
         query = """
         INSERT INTO menu_items (menu_id, item_id)
         VALUES (
-            (SELECT _id FROM main_menu WHERE name = %s),
-            (SELECT _id FROM items WHERE name = %s)
+            (SELECT _id FROM items WHERE name = %s),
+            (SELECT _id FROM ingredients WHERE name = %s)
         );"""
         params = (item_name, ingredient_name)
         self.insert(query, params)
