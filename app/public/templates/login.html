@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="/static/images/favicon.ico">
+</head>
+
+<body>
+
+    <header class="header">
+        <a href="/">
+            <img src="/static/images/logo2.png" alt="Logo" id="headerLogo">
+        </a>
+        <div>
+            <button
+                onclick="location.href='https://api.whatsapp.com/send/?phone=5521975445554&text=Cadastro&type=phone_number&app_absent=0'">Não possui cadastro?</button>
+        </div>
+    </header>
+
+    <div class="body-content">
+        <form action="/auth/login" method="post" enctype="application/x-www-form-urlencoded" class="login-form">
+            <h2>Login</h2>
+            <div class="form-group">
+                <input type="email" id="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" name="password" placeholder="Senha" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Entrar</button>
+            </div>
+            <div class="form-group">
+                <a href="forgot_password">Esqueceu a Senha?</a>
+            </div>
+        </form>
+    </div>
+
+    <footer class="footer">
+        Contato: <a href="mailto:email@example.com">email@example.com</a> | <a href="https://api.whatsapp.com/send/?phone=5521975445554&text=Cadastro&type=phone_number&app_absent=0">+123 456 7890</a>
+    </footer>
+
+</body>
+
+</html>
