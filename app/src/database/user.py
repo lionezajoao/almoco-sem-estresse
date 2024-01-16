@@ -1,4 +1,5 @@
 from src.database.base import Database
+import uuid
 
 class UserDatabase(Database):
     def __init__(self):
@@ -18,10 +19,11 @@ class UserDatabase(Database):
         params = (email,)
         return self.query(query, params)
     
-    def insert_user(self, email, password, role, name):
-        query = "INSERT INTO users (email, password, role, name) VALUES (%s, %s, %s, %s)"
-        params = (email, password, role, name)
-        return self.query(query, params)
+    def insert_user(self, name, email, password, role):
+        user_id = str(uuid.uuid4())
+        query = "INSERT INTO users (_id, email, password, role, name) VALUES (%s, %s, %s, %s, %s)"
+        params = (user_id, email, password, role, name)
+        return self.insert(query, params)
     
     def update_user_password(self, email, password):
         query = "UPDATE users SET password = %s WHERE email = %s"

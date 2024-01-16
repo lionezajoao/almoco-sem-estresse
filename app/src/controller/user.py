@@ -31,7 +31,8 @@ class UserController:
             raise HTTPException(status_code=400, detail="User already exists")
         
         hashed_password = self.utils.hash_password(data.password)
-        self.insert_user(data.name, data.email, hashed_password, data.role, data.name)
+        print(hashed_password)
+        self.user.insert_new_user(data.name, data.email, hashed_password, data.role)
         return JSONResponse(content={"message": "User added successfully"}, status_code=200)
     
     def handle_new_password(self, data):

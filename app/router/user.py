@@ -27,7 +27,7 @@ def get_user_by_email(email: str):
 def get_user_password_by_email(email: str):
     return user.handle_user_password(email)
 
-@router.post("/add_new_user")
+@router.post("/create_user")
 def add_new_user(request: UserCreate):
     return user.handle_new_user(request)
 

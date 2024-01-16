@@ -8,10 +8,13 @@ class User(UserDatabase):
         return self.get_users()
     
     def get_user_by_email(self, email):
-        return self.get_user(email)
+        return self.get_user(email)[0]
     
-    def insert_user(self, email, password):
-        return self.insert_user(email, password)
+    def insert_new_user(self, name, email, password, role):
+        return self.insert_user(name, email, password, role)
+    
+    def get_encrypted_pass(self, email):
+        return self.get_user_password(email)[0][0]
     
     def update_user_password(self, email, password):
         return self.update_user_password(email, password)

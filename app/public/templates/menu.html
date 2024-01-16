@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="/static/images/favicon.ico">
+</head>
+
+<body>
+
+    <header class="header">
+        <a href="/">
+            <img src="/static/images/logo2.png" alt="Logo" id="headerLogo">
+        </a>
+    </header>
+
+    <div class="body-content">
+        <div id="card-container">
+            <!-- Cards will be added here dynamically -->
+        </div>
+        
+        <template id="card-template">
+            <div class="card">
+                <form class="card-form">
+                </form>
+            </div>
+        </template>
+        <button id="add-card-button">Add Card</button>
+        <button id="remove-card-button">Remove Card</button>
+        <script src="/static/js/index.js"></script>
+    </div>
+
+    <footer class="footer">
+        Contato: <a href="mailto:email@example.com">email@example.com</a> | <a href="https://api.whatsapp.com/send/?phone=5521975445554&text=Cadastro&type=phone_number&app_absent=0">+123 456 7890</a>
+    </footer>
+
+</body>
+
+</html>

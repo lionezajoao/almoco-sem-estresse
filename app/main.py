@@ -15,7 +15,7 @@ app.mount(
 app.include_router(auth.router)
 app.include_router(base.router)
 app.include_router(menu.router)
-# app.include_router(user_routes.router)
+app.include_router(user.router)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="localhost", port=8000, reload=True)

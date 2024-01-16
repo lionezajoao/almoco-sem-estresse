@@ -17,3 +17,7 @@ def get_home(request: Request):
 @router.get("/login", response_class=HTMLResponse)
 def get_login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
+
+@router.get("/menu", response_class=HTMLResponse)
+def get_login_form(request: Request):
+    return templates.TemplateResponse("menu.html", {"request": request})
