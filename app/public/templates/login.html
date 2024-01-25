@@ -22,7 +22,7 @@
     </header>
 
     <div class="body-content">
-        <form action="/auth/login" method="post" enctype="application/x-www-form-urlencoded" class="login-form">
+        <form id="loginForm" action="/auth/login" method="post" enctype="application/x-www-form-urlencoded" class="login-form" onsubmit="handleLogin(event)">
             <h2>Login</h2>
             <div class="form-group">
                 <input type="email" id="email" name="email" placeholder="Email" required>
@@ -36,8 +36,35 @@
             <div class="form-group">
                 <a href="forgot_password">Esqueceu a Senha?</a>
             </div>
+            <div id="loginWarning" style="color: red; display: none;">Invalid login credentials</div>
         </form>
     </div>
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            const form = document.getElementById('loginForm');
+            console.log(form);
+            console.log(form.email.value, form.password.value);
+            fetch(form.action, {
+                method: 'POST',
+                body: JSON.stringify({
+                    email: form.email.value,
+                    password: form.password.value
+                })
+            })
+            .then(response => {
+                if(response.ok) {
+                    window.location.href = '/menu'; // Redirect on successful login
+                } else {
+                    document.getElementById('loginWarning').style.display = 'block'; // Show warning message
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Optionally handle network errors
+            });
+        }
+    </script>
 
     <footer class="footer">
         Contato: <a href="mailto:email@example.com">email@example.com</a> | <a href="https://api.whatsapp.com/send/?phone=5521975445554&text=Cadastro&type=phone_number&app_absent=0">+123 456 7890</a>

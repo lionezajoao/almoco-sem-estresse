@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Form, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import JSONResponse
 from starlette.responses import RedirectResponse
 
 from src.controller.auth import AuthController
@@ -14,11 +14,12 @@ router = APIRouter(
 auth = AuthController()
 
 @router.post("/login")
-async def login(request: Request, email: str = Form(...), password: str = Form(...)):
+async def login(request:Request, data: UserLogin):
+    email = data.email
+    password = data.password
     user = await auth.authenticate_user(email, password)
     if user:
-        # Redirect to another page
-        return RedirectResponse(url="http://localhost:8000/menu")
+        return JSONResponse(status_code=200, content={"redirect": "http://localhost:8000/menu"})
     else:
         raise HTTPException(status_code=401, detail="Invalid email or password")
     
