@@ -10,11 +10,13 @@ class AuthController:
         self.utils = Utils()
         pass
     
-    async def authenticate_user(self, email: str = Header(...), password: str = Header(...)):
+    async def authenticate_user(self, email: str, password: str):
         user_data = self.user.get_user_by_email(email)
         
         if not user_data:
             raise HTTPException(status_code=404, detail="user-not-found")
+        
+        user_data = user_data[0]
         
         hashed_pwd = self.user.get_encrypted_pass(email)
         if not self.utils.verify_password(password, hashed_pwd):

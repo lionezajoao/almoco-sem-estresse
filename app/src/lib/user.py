@@ -8,7 +8,7 @@ class User(UserDatabase):
         return self.get_users()
     
     def get_user_by_email(self, email):
-        return self.get_user(email)[0]
+        return self.get_user(email)
     
     def insert_new_user(self, name, email, password, role):
         return self.insert_user(name, email, password, role)

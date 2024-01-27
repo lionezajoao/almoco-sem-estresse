@@ -28,10 +28,10 @@ function removeCard() {
 function addFormFields(formElement) {
     // Define the fields you want in each form
     const fields = [
-        { name: 'name', type: 'text', placeholder: 'Name' },
-        { name: 'email', type: 'email', placeholder: 'Email' },
-        { name: 'message', type: 'text', placeholder: 'Message' }
-        // Add more fields as needed
+        { name: 'prato', type: 'text', placeholder: 'Prato Principal' },
+        { name: 'salad', type: 'text', placeholder: 'Saladas' },
+        { name: 'garrison', type: 'text', placeholder: 'Guarnição' },
+        { name: 'followUp', type: 'text', placeholder: 'Acompanhamento' }
     ];
 
     fields.forEach(field => {
