@@ -22,22 +22,24 @@
     </header>
 
     <div class="body-content">
-        <form id="loginForm" action="/auth/login" method="post" enctype="application/x-www-form-urlencoded" class="login-form" onsubmit="handleLogin(event)">
-            <h2>Login</h2>
-            <div class="form-group">
-                <input type="email" id="email" name="email" placeholder="Email" required>
-            </div>
-            <div class="form-group">
-                <input type="password" id="password" name="password" placeholder="Senha" required>
-            </div>
-            <div class="form-group">
-                <button type="submit">Entrar</button>
-            </div>
-            <div class="form-group">
-                <a href="forgot_password">Esqueceu a Senha?</a>
-            </div>
-            <div id="loginWarning" style="color: red; display: none;">Invalid login credentials</div>
-        </form>
+        <div class="login">
+            <form id="loginForm" action="/auth/login" method="post" enctype="application/x-www-form-urlencoded" class="login-form" onsubmit="handleLogin(event)">
+                <h2>Login</h2>
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" name="password" placeholder="Senha" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Entrar</button>
+                </div>
+                <div class="form-group">
+                    <a href="forgot_password">Esqueceu a Senha?</a>
+                </div>
+                <div id="loginWarning" style="color: red; display: none;">Invalid login credentials</div>
+            </form>
+        </div>
     </div>
     <script>
         function handleLogin(event) {

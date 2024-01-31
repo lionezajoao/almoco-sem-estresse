@@ -6,8 +6,11 @@ class Menu(MenuDatabase):
 
     def get_all_items(self):
         data = self.get_menu()
-
         return data
+    
+    def get_item_by_type(self, type):
+        data = self.get_data_by_type(type)
+        return [item[0] for item in data]
     
     def get_all_ingredients(self):
         return self.get_ingredients()

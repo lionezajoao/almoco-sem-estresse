@@ -20,6 +20,10 @@ menu = MenuController()
 def get_menu():
     return menu.handle_all_items()
 
+@router.get("/get_item_by_type")
+def get_item_by_type(type: str):
+    return menu.handle_data_by_type(type)
+
 @router.get("/list_all_ingredients")
 def get_ingredients():
     return menu.handle_all_ingredients()

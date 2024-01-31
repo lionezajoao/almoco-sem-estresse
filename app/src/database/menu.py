@@ -12,6 +12,11 @@ class MenuDatabase(Database):
         query = "SELECT name, type FROM ingredients;"
         return self.query(query)
     
+    def get_data_by_type(self, type: str) -> list:
+        query = "SELECT name FROM items WHERE type = %s"
+        params = (type,)
+        return self.query(query, params)
+    
     def get_item_by_name(self, name: str) -> list:
         query = "SELECT name, type FROM items WHERE name = %s"
         params = (name,)

@@ -10,6 +10,9 @@ class MenuController:
 
     def handle_all_items(self):
         return JSONResponse(content=self.menu.get_all_items(), status_code=200)
+    
+    def handle_data_by_type(self, type: str):
+        return JSONResponse(content=self.menu.get_item_by_type(type), status_code=200)
 
     def handle_all_ingredients(self):
         return JSONResponse(content=self.menu.get_all_ingredients(), status_code=200)
