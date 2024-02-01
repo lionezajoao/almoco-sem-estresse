@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 contentBox.innerHTML = content;
     
                 // Append the box to the summary container
-                document.getElementById("summary-container").appendChild(contentBox);
+                document.getElementById("boxes-container").appendChild(contentBox);
                 subscribeButton.style.display = "block";
     
                 // Remove selected weekday from dropdown options
@@ -77,15 +77,30 @@ document.addEventListener("DOMContentLoaded", async function() {
     // Add button and code to subscribe to the backend
     document.getElementById("submit-menu-button").addEventListener("click", async function() {
         try {
-            const response = await fetch("/subscribe", {
+            const boxes = document.getElementsByClassName("summary-box");
+            const boxContent = Array.from(boxes).map(box => {
+                const weekday = box.querySelector("p:nth-child(1)").textContent.split(":")[1].trim();
+                const mainDish = box.querySelector("p:nth-child(2)").textContent.split(":")[1].trim();
+                const salad = box.querySelector("p:nth-child(3)").textContent.split(":")[1].trim();
+                const sideDish = box.querySelector("p:nth-child(4)").textContent.split(":")[1].trim();
+                const accompaniment = box.querySelector("p:nth-child(5)").textContent.split(":")[1].trim();
+                return {
+                    weekday,
+                    main_dish: mainDish,
+                    salad,
+                    side_dish: sideDish,
+                    accompaniment
+                };
+            });
+
+            const response = await fetch("/menu/create_menu", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    email: document.getElementById("email-input").value
-                })
+                body: JSON.stringify(boxContent)
             });
+
             if (response.ok) {
                 console.log("Subscribed successfully!");
             } else {

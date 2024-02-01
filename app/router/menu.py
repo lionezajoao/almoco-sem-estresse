@@ -1,7 +1,9 @@
+from typing import List
 from fastapi import APIRouter
 
 from src.controller.menu import MenuController
-from models.menu_models import MenuItemModel, IngredientsModel, MenuItemIngredientsModel
+from models.menu_models import MenuItemModel, NewMenuModel, MenuItemIngredientsModel
+from typing import List
 
 router = APIRouter(
     prefix="/menu",
@@ -43,3 +45,7 @@ def get_ingredients(name: str):
 @router.post("/add_new_item")
 def add_new_item(request: MenuItemIngredientsModel):
     return menu.handle_insert_new_item(request)
+
+@router.post("/create_menu")
+def create_menu(request: List[NewMenuModel]):
+    return menu.handle_create_menu(request)

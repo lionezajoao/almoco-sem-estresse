@@ -1,11 +1,16 @@
-/* Add some basic styling */
+
+
 body {
     font-family: Arial, sans-serif;
-    margin: auto;
-    padding: 0;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+}
+
+body, html {
+    height: 100%; /* Set to 100% instead of 100vh to avoid issues with browser UI */
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Hide horizontal scrollbar if any */
 }
 
 .header {
@@ -14,6 +19,7 @@ body {
     align-items: center;
     padding: 1em;
     background-color: #f8f8f8;
+    width: 100%;
 }
 
 .header img {
@@ -47,7 +53,6 @@ body {
     text-align: center;
     bottom: 0;
     width: 100%;
-    margin: auto;
 }
 
 .login-form {
@@ -126,7 +131,6 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     width: 300px;
     margin: auto;
-    min-width: 500px;
 }
 
 .card-title {
@@ -150,7 +154,6 @@ body {
 .card-form .form-group {
     display: flex;
     flex-direction: column;
-    /* margin-bottom: 1rem; */
 }
 
 .card .form-group button {
@@ -177,50 +180,36 @@ body {
 
 .summary-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    /* position: relative; */
-    width: 400px;
+    justify-content: flex-start;
+    /* width: 400px; */
     padding: 20px;
     box-sizing: border-box;
-    margin-bottom: 20px;
 }
 
-/* .summary-container {
-    position: absolute;
-    top: auto;
-    right: 0;
-    bottom: 0;
-    width: 300px;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-y: auto;
-} */
+.finalizar-button-container {
+    margin-bottom: 1rem; /* Adjust as necessary for spacing */
+}
+
+.boxes-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* This will center the boxes */
+    gap: 10px; /* This adds space between the boxes */
+}
 
 .summary-box {
     border: 1px solid #ddd;
     padding: 20px;
-    margin: 5px;
+    margin: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     background-color: #f9f9f9;
-    width: max-content;
+    width: 200px auto;
 }
 
-.summary-box button {
-    width: 100%;
-    padding: 0.3rem;
-    border: none;
-    border-radius: 4px;
-    background-color: #5cb85c;
-    color: white;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.summary-container button {
+.button-container button {
     width: 100%;
     padding: 0.3rem;
     border: none;
@@ -236,6 +225,18 @@ body {
 .summary-box .content-item {
     text-align: left;
     margin-bottom: 1px;
+}
+
+.summary-box .content-item button {
+    width: 100%;
+    padding: 0.3rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #5cb85c;
+    color: white;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 

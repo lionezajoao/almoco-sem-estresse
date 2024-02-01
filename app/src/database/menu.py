@@ -41,16 +41,17 @@ class MenuDatabase(Database):
         if self.get_ingredients_by_name(name):
             return True
 
-    def get_item_ingredients(self, name: str) -> list:
+    def get_items_ingredients(self, names: list) -> list:
         query = """
-        select name from ingredients
-        where _id in (
-            select item_id from item_ingredients
-            where menu_id = (
-                select _id
-                from items where name = %s));"""
+        SELECT name FROM ingredients
+        WHERE _id IN (
+            SELECT item_id FROM item_ingredients
+            WHERE menu_id IN (
+                SELECT _id FROM items WHERE name IN %s
+            )
+        );"""
         
-        params = (name,)
+        params = (names,)
         result = self.query(query, params)
         return [row[0] for row in result]
     
