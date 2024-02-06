@@ -18,7 +18,33 @@
         </a>
     </header>
 
+    <div class="week-checker" id="week-checker-sidebar">
+        <!-- Week completion status will be updated here by JavaScript -->
+        <div id="week-1-complete">Semana 1:</div>
+        <div id="week-2-complete">Semana 2:</div>
+        <div id="week-3-complete">Semana 3:</div>
+        <div id="week-4-complete">Semana 4:</div>
+    </div>
+
     <div class="body-content">
+        <div id="week-selector-container" class="card-container">
+            <div class="card">
+                <form class="card-form">
+                    <label class="card-title">Selecione a Semana</label>
+                    <div class="form-group">
+                        <select id="week-selector" name="week-selector" required>
+                            <option value="" disabled selected>Semana</option>
+                            <option value="1">Semana 1</option>
+                            <option value="2">Semana 2</option>
+                            <option value="3">Semana 3</option>
+                            <option value="4">Semana 4</option>
+                        </select>
+                        <button type="button" id="finish-button">Finalizar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div id="card-container" class="card-container">
             <div class="card">
                 <form class="card-form">
@@ -48,7 +74,7 @@
                             <option value="" disabled selected>Acompanhamento</option>
                             <!-- Options here -->
                         </select>
-                        <button type="button" id="add-menu-button">Adicionar ao Menu</button>
+                        <button type="button" id="add-week-button">Adicionar à Semana</button>
                     </div>
                 </form>
             </div>
@@ -56,7 +82,7 @@
 
         <div id="summary-container" class="summary-container">
             <div class="button-container">
-                <button type="button" id="submit-menu-button">Finalizar</button>
+                <button type="button" id="add-menu-button">Adicionar ao Menu</button>
             </div>
             <div id="boxes-container" class="boxes-container">
                 <!-- Stylized boxes will be added here -->

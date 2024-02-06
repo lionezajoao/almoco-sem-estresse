@@ -13,6 +13,24 @@ body, html {
     overflow-x: hidden; /* Hide horizontal scrollbar if any */
 }
 
+.week-checker {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background: #f4f4f4;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    text-align: right;
+}
+
+/* Style for completed week */
+.week-complete {
+    color: #4CAF50; /* Green color for checkmark */
+    font-weight: bold;
+}
+
 .header {
     display: flex;
     justify-content:space-between;
