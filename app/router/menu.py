@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from fastapi import APIRouter
 
 from src.controller.menu import MenuController
@@ -47,5 +47,5 @@ def add_new_item(request: MenuItemIngredientsModel):
     return menu.handle_insert_new_item(request)
 
 @router.post("/create_menu")
-def create_menu(request: List[NewMenuModel]):
+def create_menu(request: Optional[NewMenuModel]):
     return menu.handle_create_menu(request)

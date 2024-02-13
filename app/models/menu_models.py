@@ -14,9 +14,16 @@ class MenuItemIngredientsModel(BaseModel):
     ingredients: List[IngredientsModel]
     type: Optional[str] = None # For detailed menu items, use this field. For simple menu items, leave this field blank.
 
-class NewMenuModel(BaseModel):
+class DataModel(BaseModel):
     weekday: str
-    main_dish: str
-    salad: str
-    side_dish: str
-    accompaniment: str
+    main_dish: Optional[str]
+    salad: Optional[str]
+    side_dish: Optional[str]
+    accompaniment: Optional[str]
+class MenuModel(BaseModel):
+    week_choice: str
+    data: List[DataModel]
+
+class NewMenuModel(BaseModel):
+    data: List[MenuModel]
+

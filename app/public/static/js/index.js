@@ -9,10 +9,11 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     let boxCount = 0; // Counter for the number of summary boxes
     let selectedMenus = []; // Array to store the selected menus
-    let menu = [];
+    let weekMenu = [];
+    let weekChoice;
 
     document.getElementById("add-week-button").addEventListener("click", function() {
-        const weekChoice = document.getElementById("week-selector").value;
+        weekChoice = document.getElementById("week-selector").value;
         const weekDay = document.getElementById("week-day").value;
 
         if (weekChoice && weekDay) { // Check if weekChoice and weekDay are not empty
@@ -24,14 +25,13 @@ document.addEventListener("DOMContentLoaded", async function() {
                 const accompaniment = document.getElementById("accompaniment").value;
 
                 // Create a new menu object
-                menu.push({
-                    week_choice: weekChoice,
+                const menu = {
                     weekday: weekDay,
                     main_dish: mainDish,
                     salad: salad,
                     side_dish: sideDish,
                     accompaniment: accompaniment
-                });
+                };
 
                 // Create a new box
                 const contentBox = document.createElement("div");
@@ -69,8 +69,11 @@ document.addEventListener("DOMContentLoaded", async function() {
                         subscribeButton.style.display = "none";
                     }
 
-                    // Remove the menu from the selectedMenus array
-                    selectedMenus = selectedMenus.filter(menu => menu.week_choice !== weekChoice && menu.weekday !== weekday);
+                    // Return the week day to the dropdown menu
+                    const optionElement = document.createElement("option");
+                    optionElement.value = weekDay;
+                    optionElement.text = handleWeekDay(weekDay);
+                    document.getElementById("week-day").appendChild(optionElement);
                 });
 
                 boxCount++; // Increase the box count when a box is added
@@ -80,6 +83,21 @@ document.addEventListener("DOMContentLoaded", async function() {
                 document.getElementById("salad").value = "";
                 document.getElementById("side-dish").value = "";
                 document.getElementById("accompaniment").value = "";
+
+                // Find the week menu object for the selected week choice
+                let weekMenuObj = weekMenu.find(obj => obj.week_choice === weekChoice);
+
+                // If the week menu object does not exist, create a new one
+                if (!weekMenuObj) {
+                    weekMenuObj = {
+                        week_choice: weekChoice,
+                        data: []
+                    };
+                    weekMenu.push(weekMenuObj);
+                }
+
+                // Add the menu object to the week menu data
+                weekMenuObj.data.push(menu);
             } else {
                 console.log("Maximum number of summary boxes reached.");
             }
@@ -89,27 +107,33 @@ document.addEventListener("DOMContentLoaded", async function() {
     });
     
     document.getElementById("add-menu-button").addEventListener("click", function() {
+        console.log(weekMenu);
 
-        
-        const weekChoice = document.getElementById("week-selector").value;
         document.getElementById("week-selector").querySelector(`option[value="${weekChoice}"]`).remove();
         const weekDays = ["mon", "tue", "wed", "thu", "fri"];
-        
+
         weekDays.forEach(day => {
-            const optionElement = document.createElement("option");
-            optionElement.value = day;
-            optionElement.text = handleWeekDay(day);
-            document.getElementById("week-day").appendChild(optionElement);
+            const weekDaySelect = document.getElementById("week-day");
+            const existingOption = weekDaySelect.querySelector(`option[value="${day}"]`);
+            if (!existingOption) {
+                const optionElement = document.createElement("option");
+                optionElement.value = day;
+                optionElement.text = handleWeekDay(day);
+                weekDaySelect.appendChild(optionElement);
+            }
         });
         
         document.getElementById("boxes-container").innerHTML = "";
         boxCount = 0;
         subscribeButton.style.display = "none";
 
-        selectedMenus.push(menu);
+        selectedMenus.push(...weekMenu);
+        weekMenu = [];
 
-        updateWeekChecker(selectedMenus);
-
+        selectedMenus.forEach((week, index) => {
+            const weekElement = document.getElementById(`week-${week.week_choice}-complete`);
+            weekElement.textContent = `Semana ${week.week_choice}: ${index < selectedMenus.length - 1 ? '✓' : ''}`;
+        });
     });
 
     // Add button and code to submit the menu to the backend
@@ -121,7 +145,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(selectedMenus)
+                    body: JSON.stringify({ data: selectedMenus })
                 });
 
                 if (response.ok) {
@@ -134,6 +158,9 @@ document.addEventListener("DOMContentLoaded", async function() {
 
                     // Clear the selectedMenus array
                     selectedMenus = [];
+
+                    // Reload the page
+                    // location.reload();
                 } else {
                     console.log("Failed to add menu.");
                 }
@@ -158,29 +185,35 @@ function handleWeekDay(weekDay) {
             return "Quinta-feira";
         case "fri":
             return "Sexta-feira";
+        case "Segunda-feira":
+            return "mon";
+        case "Terça-feira":
+            return "tue";
+        case "Quarta-feira":
+            return "wed";
+        case "Quinta-feira":
+            return "thu";
+        case "Sexta-feira":
+            return "fri";
         default:
             case "Invalid day":
     }
 }
 
 function updateWeekChecker(selectedMenus) {
-    // Assuming you have 5 days in a week and you want to check if all days have been selected for a week
-    const weekComplete = {
-        '1': false,
-        '2': false,
-        '3': false,
-        '4': false
-    };
+    const weekComplete = {};
 
-    // Check if all days for a week are selected
-    selectedMenus.forEach(menuWeek => {
-        if (menuWeek.length === 5) {
-            weekComplete[menuWeek[0].week_choice] = true;
+    // Find the maximum week number
+    let maxWeek = 0;
+    for (const week in selectedMenus) {
+        const weekNumber = parseInt(week);
+        if (weekNumber > maxWeek) {
+            maxWeek = weekNumber;
         }
-    });
+    }
 
     // Update UI accordingly
-    for (const week in weekComplete) {
+    for (let week = 1; week <= maxWeek; week++) {
         const weekElementId = `week-${week}-complete`;
         let weekElement = document.getElementById(weekElementId);
         if (!weekElement) {
@@ -190,7 +223,7 @@ function updateWeekChecker(selectedMenus) {
             // Add the weekElement to the sidebar or a specific location in your UI
         }
 
-        weekElement.textContent = `Semana ${week}: ${weekComplete[week] ? '✓' : ''}`;
+        weekElement.textContent = `Semana ${week}: ${selectedMenus[week] ? '✓' : ''}`;
     }
 }
 

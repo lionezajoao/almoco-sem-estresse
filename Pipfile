@@ -14,6 +14,9 @@ passlib = "*"
 jinja2 = "*"
 bcrypt = "4.0.1"
 fpdf = "*"
+reportlab = "*"
+pypdf2 = "*"
+pdfrw = "*"
 
 [dev-packages]
 

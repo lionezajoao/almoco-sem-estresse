@@ -32,19 +32,26 @@ class Menu(MenuDatabase):
             self.insert_item_ingredient(data.name, ingredient)
 
     def create_menu(self, data):
-        weekday = data.weekday
-        main_dish = data.main_dish
-        salad = data.salad
-        side_dish = data.side_dish
-        accompaniment = data.accompaniment
 
-        ingredient_list = self.get_ingredients_from_items([main_dish, salad, side_dish, accompaniment])
-        
         pdf = FPDF()
         pdf.add_page()
         pdf.set_font("Arial", size=12)
-        
-        for ingredient in ingredient_list:
-            pdf.cell(0, 10, ingredient, ln=True)
-        
-        pdf.output("ingredients.pdf")
+
+        for menu in data:
+            pdf.cell(0, 10, f"Week Choice: {menu.week_choice}", ln=True)
+
+            if isinstance(menu.data, list):
+                for item in menu.data:
+                    pdf.cell(0, 10, f"Weekday: {item.weekday}", ln=True)
+                    pdf.cell(0, 10, f"Main Dish: {item.main_dish}", ln=True)
+                    pdf.cell(0, 10, f"Salad: {item.salad}", ln=True)
+                    pdf.cell(0, 10, f"Side Dish: {item.side_dish}", ln=True)
+                    pdf.cell(0, 10, f"Accompaniment: {item.accompaniment}", ln=True)
+            else:
+                pdf.cell(0, 10, f"Weekday: {menu.data.weekday}", ln=True)
+                pdf.cell(0, 10, f"Main Dish: {menu.data.main_dish}", ln=True)
+                pdf.cell(0, 10, f"Salad: {menu.data.salad}", ln=True)
+                pdf.cell(0, 10, f"Side Dish: {menu.data.side_dish}", ln=True)
+                pdf.cell(0, 10, f"Accompaniment: {menu.data.accompaniment}", ln=True)
+
+        pdf.output("menu.pdf")
