@@ -17,6 +17,9 @@ fpdf = "*"
 reportlab = "*"
 pypdf2 = "*"
 pdfrw = "*"
+missil = "*"
+pandas = "*"
+xlsxwriter = "*"
 
 [dev-packages]
 

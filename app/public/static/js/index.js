@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
         selectedMenus.forEach((week, index) => {
             const weekElement = document.getElementById(`week-${week.week_choice}-complete`);
-            weekElement.textContent = `Semana ${week.week_choice}: ${index < selectedMenus.length - 1 ? '✓' : ''}`;
+            weekElement.textContent = `Semana ${week.week_choice}: ✓`;
         });
     });
 

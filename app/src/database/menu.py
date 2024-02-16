@@ -41,19 +41,39 @@ class MenuDatabase(Database):
         if self.get_ingredients_by_name(name):
             return True
 
-    def get_items_ingredients(self, names: list) -> list:
+    def get_items_ingredients(self, name: str) -> list:
         query = """
         SELECT name FROM ingredients
         WHERE _id IN (
             SELECT item_id FROM item_ingredients
             WHERE menu_id IN (
-                SELECT _id FROM items WHERE name IN %s
+                SELECT _id FROM items WHERE name = %s
             )
         );"""
         
-        params = (names,)
+        params = (name,)
         result = self.query(query, params)
         return [row[0] for row in result]
+    
+    def get_ingredient_type_by_name(self, name: str) -> str:
+        query = "SELECT type FROM ingredients WHERE name = %s"
+        params = (name,)
+        result = self.query(query, params)
+        if result:
+            return result[0][0]
+        
+    def get_relational_menu(self):
+        query = """
+        SELECT items.name AS item_name,
+            items.type AS item_type,
+            ing.name   AS ingredient_name,
+            ing.type   AS ingredient_type
+        FROM items
+                LEFT JOIN item_ingredients ii ON items._id = ii.menu_id
+                LEFT JOIN ingredients ing ON ii.item_id = ing._id
+        WHERE ing.name IS NOT NULL
+        AND ing.type IS NOT NULL;"""
+        return self.query(query)
     
     def insert_item(self, name: str):
         query = "INSERT INTO items (name) VALUES (%s)"

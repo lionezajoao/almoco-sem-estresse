@@ -18,7 +18,8 @@ class Database:
         self.cur.execute(query, params)
         try:
             return self.cur.fetchall()
-        except:
+        except Exception as e:
+            print(e)
             return None
     
     def insert(self, query, params=None):
