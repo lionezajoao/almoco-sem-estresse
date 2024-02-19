@@ -1,8 +1,14 @@
 document.addEventListener("DOMContentLoaded", async function() {
-    const mainPlate = await retrieveMainPlate();
-    const salad = await retrieveSalad();
-    const garrison = await retrieveGarrison();
-    const followUp = await retrieveFollowUp();
+    const jwt = localStorage.getItem("token");
+    console.log("Token:", jwt);
+    if (!jwt) {
+        console.log("No token found.");
+        window.location.href = "/login";
+    }
+    const mainPlate = await retrieveMainPlate(jwt);
+    const salad = await retrieveSalad(jwt);
+    const garrison = await retrieveGarrison(jwt);
+    const followUp = await retrieveFollowUp(jwt);
     const subscribeButton = document.getElementById("add-menu-button");
 
     addFormFields(document.getElementById("card-container").querySelector('.card'), mainPlate, salad, garrison, followUp);
@@ -160,7 +166,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                     selectedMenus = [];
 
                     // Reload the page
-                    // location.reload();
+                    location.reload();
                 } else {
                     console.log("Failed to add menu.");
                 }
@@ -228,26 +234,34 @@ function updateWeekChecker(selectedMenus) {
 }
 
 
-async function retrieveMainPlate() {
-    const data = await fetch(`/menu/get_item_by_type?type=Prato principal`);
+async function retrieveMainPlate(token) {
+    const data = await fetch(`/menu/get_item_by_type?type=Prato principal`, {
+        headers: { token }
+    });
     const mainPlate = await data.json();
     return mainPlate;
 }
 
-async function retrieveSalad() {
-    const data = await fetch(`/menu/get_item_by_type?type=Salada`);
+async function retrieveSalad(token) {
+    const data = await fetch(`/menu/get_item_by_type?type=Salada`, {
+        headers: { token }
+    });
     const salad = await data.json();
     return salad;
 }
 
-async function retrieveGarrison() {
-    const data = await fetch(`/menu/get_item_by_type?type=Guarnição`);
+async function retrieveGarrison(token) {
+    const data = await fetch(`/menu/get_item_by_type?type=Guarnição`, {
+        headers: { token }
+    });
     const garrison = await data.json();
     return garrison;
 }
 
-async function retrieveFollowUp() {
-    const data = await fetch(`/menu/get_item_by_type?type=Acompanhamento`);
+async function retrieveFollowUp(token) {
+    const data = await fetch(`/menu/get_item_by_type?type=Acompanhamento`, {
+        headers: { token }
+    });
     const followUp = await data.json();
     return followUp;
 }

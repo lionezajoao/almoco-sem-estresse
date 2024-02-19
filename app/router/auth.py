@@ -1,7 +1,6 @@
-from typing import Optional
-from fastapi import APIRouter, Form, HTTPException, Request
+import missil
+from fastapi import APIRouter, HTTPException, Response
 from fastapi.responses import JSONResponse
-from starlette.responses import RedirectResponse
 
 from src.controller.auth import AuthController
 from models.user_models import UserLogin, UserCreate
@@ -14,24 +13,30 @@ router = APIRouter(
 
 auth = AuthController()
 
+bearer = missil.FlexibleTokenBearer(auth.token_key, auth.token_secret)
+rules = missil.make_rules(bearer, "admin", "user")
+
 @router.post("/login")
 async def login(user_data: UserLogin):    
     if user_data:
         email = user_data.email
         password = user_data.password
 
-    user = await auth.authenticate_user(email, password)
-    if user:
+    response = await auth.authenticate_user(email, password)
+    
+    if response["success"]:
         return JSONResponse(content={
             "success": True,
             "detail": "access-granted",
+            "user_data": response["user_data"],
+            "token": response["token"]
         }, status_code=200)
-    else:
-        raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    raise HTTPException(status_code=401, detail="Invalid email or password")
     
 
 
-@router.post("/register")
-def register(username: str, password: str):
-    # Your registration logic here
-    return {"message": "Registered successfully"}
+# @router.post("/register", dependencies=[rules["admin"]])
+# def register(username: str, password: str):
+#     # Your registration logic here
+#     return {"message": "Registered successfully"}

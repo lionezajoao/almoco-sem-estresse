@@ -54,14 +54,19 @@
             })
             .then(response => {
                 if(response.ok) {
-                    window.location.href = '/menu'; // Redirect on successful login
+                    return response.json();
                 } else {
-                    document.getElementById('loginWarning').style.display = 'block'; // Show warning message
+                    throw new Error('Invalid login credentials');
                 }
+            })
+            .then(data => {
+                // Save JWT in localStorage
+                localStorage.setItem('jwt', data.token);
+                window.location.href = '/menu'; // Redirect on successful login
             })
             .catch(error => {
                 console.error('Error:', error);
-                // Optionally handle network errors
+                document.getElementById('loginWarning').style.display = 'block'; // Show warning message
             });
         }
     </script>

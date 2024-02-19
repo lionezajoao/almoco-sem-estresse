@@ -1,9 +1,12 @@
 from typing import List, Optional
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from fastapi.middleware.cors import CORSMiddleware
 
+from src.controller.auth import AuthController
 from src.controller.menu import MenuController
-from models.menu_models import MenuItemModel, NewMenuModel, MenuItemIngredientsModel
-from typing import List
+
+from models.user_models import UserLogin
+from models.menu_models import NewMenuModel, MenuItemIngredientsModel
 
 router = APIRouter(
     prefix="/menu",
@@ -15,37 +18,38 @@ router = APIRouter(
         500: {"description": "Internal Server Error"}
     },
 )
-menu = MenuController()
 
+menu = MenuController()
+auth = AuthController()
 
 @router.get("/list_all_items")
-def get_menu():
+def get_menu(user: UserLogin = Depends(auth.get_current_user)):
     return menu.handle_all_items()
 
 @router.get("/get_item_by_type")
-def get_item_by_type(type: str):
+def get_item_by_type(type: str, user: UserLogin = Depends(auth.get_current_user)):
     return menu.handle_data_by_type(type)
 
 @router.get("/list_all_ingredients")
-def get_ingredients():
+def get_ingredients(user: UserLogin = Depends(auth.get_current_user)):
     return menu.handle_all_ingredients()
 
 @router.get("/get_item")
-def get_item_by_name(name: str):
+def get_item_by_name(name: str, user: UserLogin = Depends(auth.get_current_user)):
     return menu.handle_data_by_name(name)
 
 @router.get("/get_ingredients")
-def get_ingredients_by_name(name: str):
+def get_ingredients_by_name(name: str, user: UserLogin = Depends(auth.get_current_user)):
     return menu.handle_ingredients_by_name(name)
 
 @router.get("/get_item_ingredients")
-def get_ingredients(name: str):
+def get_ingredients(name: str, user: UserLogin = Depends(auth.get_current_user)):
     return menu.handle_ingredients_from_item(name)
 
 @router.post("/add_new_item")
-def add_new_item(request: MenuItemIngredientsModel):
+def add_new_item(request: MenuItemIngredientsModel, user: UserLogin = Depends(auth.get_current_user)):
     return menu.handle_insert_new_item(request)
 
 @router.post("/create_menu")
-def create_menu(request: NewMenuModel):
+def create_menu(request: NewMenuModel, user: UserLogin = Depends(auth.get_current_user)):
     return menu.handle_create_menu(request)

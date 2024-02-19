@@ -20,6 +20,7 @@ pdfrw = "*"
 missil = "*"
 pandas = "*"
 xlsxwriter = "*"
+pyjwt = "*"
 
 [dev-packages]
 
