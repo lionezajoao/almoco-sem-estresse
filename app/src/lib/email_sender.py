@@ -14,20 +14,30 @@ class EmailSender:
         self.password = os.getenv('SMTP_PASSWORD')
         self.use_tls = use_tls
 
-    def send_email(self, subject, recipients, attachment_path=None):
-        msg = MIMEMultipart("alternative")
-        msg.attach(MIMEText(self.generate_stylized_email_body(), "html"))
+    def send_text_email(self, subject, recipients, body):
+        msg = MIMEText(body)
         msg['Subject'] = subject
         msg['From'] = self.username
         msg['To'] = ', '.join(recipients)
 
-        # Attach file if path is provided
-        if attachment_path:
-            with open(attachment_path, 'rb') as file:
-                part = MIMEApplication(file.read(), Name='attachment.xlsx')
-                part['Content-Disposition'] = f'attachment; filename="{attachment_path.split("/")[-1]}"'
-                msg.attach(part)
+        self.send_email(msg)
 
+        
+
+    def send_media_email(self, subject, recipients, attachment_path):
+        msg = MIMEMultipart()
+        msg['Subject'] = subject
+        msg['From'] = self.username
+        msg['To'] = ', '.join(recipients)
+
+        with open(attachment_path, 'rb') as file:
+            part = MIMEApplication(file.read(), Name=attachment_path.split("/")[-1])
+            part['Content-Disposition'] = f'attachment; filename="{ attachment_path.split("/")[-1] }"'
+            msg.attach(part)
+
+        self.send_email(msg)
+
+    def send_email(self, msg):
         try:
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
                 smtp_server.login(self.username, self.password)
@@ -35,6 +45,8 @@ class EmailSender:
             print("Email sent successfully!")
         except Exception as e:
             print(f"Failed to send email: {str(e)}")
+
+        
 
     def generate_stylized_email_body(self):
         # HTML header with styling

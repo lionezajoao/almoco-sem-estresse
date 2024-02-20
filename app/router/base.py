@@ -11,13 +11,17 @@ router = APIRouter(
 templates = Jinja2Templates(os.path.join(os.getcwd(), "app/public/templates"))
 
 @router.get("/", response_class=HTMLResponse)
-def get_home(request: Request):
+def get_home_page(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @router.get("/login", response_class=HTMLResponse)
-def get_login_form(request: Request):
+def get_login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 @router.get("/menu", response_class=HTMLResponse)
-def get_login_form(request: Request):
+def get_menu_page(request: Request):
     return templates.TemplateResponse("menu.html", {"request": request})
+
+@router.get("/admin", response_class=HTMLResponse)
+def get_admin_page(request: Request):
+    return templates.TemplateResponse("admin.html", {"request": request})

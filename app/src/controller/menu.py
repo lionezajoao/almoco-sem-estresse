@@ -53,8 +53,8 @@ class MenuController:
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Something went wrong: {e}")
         
-    def handle_create_menu(self, request):
+    def handle_create_menu(self, request, token_data):
         try:
-            return JSONResponse(content=self.menu.create_menu(request.data), status_code=200)
+            return JSONResponse(content=self.menu.create_menu(request.data, token_data), status_code=200)
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Something went wrong: {e}")

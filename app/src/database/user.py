@@ -10,7 +10,7 @@ class UserDatabase(Database):
         return self.query(query)
 
     def get_user(self, email):
-        query = "SELECT email, name FROM users WHERE email = %s"
+        query = "SELECT email, name, role FROM users WHERE email = %s"
         params = (email,)
         return self.query(query, params)
     

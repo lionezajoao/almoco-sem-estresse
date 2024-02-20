@@ -21,3 +21,19 @@ class User(UserDatabase):
 
     def delete_user_by_email(self, email):
         return self.delete_user_by_email(email)
+    
+    def verify_user_role(self, email: str, role: str, allowed_roles: list) -> bool:
+        user_data = self.get_user(email)
+        if not user_data:
+            return False
+        
+        user_role = user_data[0][2]
+
+        if user_role != role:
+            return False
+
+        if user_role not in allowed_roles:
+            return False
+        
+        return role in allowed_roles
+    

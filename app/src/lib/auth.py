@@ -45,10 +45,11 @@ class Auth:
         # Generate JWT token
         payload = {
             "email": email,
-            "exp": (datetime.utcnow() + timedelta(hours=12)).isoformat()  # Convert datetime to string
+            "name": user_data[1],
+            "role": user_data[2],
+            "exp": int((datetime.utcnow() + timedelta(hours=12)).timestamp())  # Convert datetime to integer
         }
         token = jwt.encode(payload, self.token_secret, algorithm="HS256")
-        print(token)
         
         return {
             "success": True,
@@ -62,14 +63,30 @@ class Auth:
     
     def verify_token(self, token):
         try:
-            decoded_token = self.instance.decode(token, self.token_secret, algorithms=["HS256"])
-            return decoded_token.get("key") == self.token_key
-        except jwt.exceptions.JWSDecodeError:
-            print("JWSEncodeError")
-            return False
-        except jwt.exceptions.InvalidKeyTypeError:
-            return False
-        except jwt.exceptions.InvalidTokenError:
-            return False
+            decoded_token = jwt.decode(token, self.token_secret, algorithms=["HS256"])
+            return {
+                "success": True,
+                "email": decoded_token["email"],
+                "name": decoded_token["name"],
+                "role": decoded_token["role"]
+            }
+        except jwt.ExpiredSignatureError:
+            return {
+                "success": False,
+                "status_code": 401,
+                "detail": "expired-token"
+            }
+        except jwt.InvalidTokenError:
+            return {
+                "success": False,
+                "status_code": 401,
+                "detail": "invalid-token"
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "status_code": 401,
+                "detail": f"Something went wrong: {e}"
+            }
         
     

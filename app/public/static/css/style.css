@@ -13,6 +13,39 @@ body, html {
     overflow-x: hidden; /* Hide horizontal scrollbar if any */
 }
 
+.logout-button {
+    /* width: 100%; */
+    padding: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #e90d1f;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.logout-button:hover {
+    background-color: #db2946;
+}
+
+.admin-button {
+    /* width: 100%; */
+    padding: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #5cb85c;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: none;
+}
+
+.admin-button:hover {
+    background-color: #4cae4c;
+}
+
 .week-checker {
     position: fixed;
     top: 50%;
@@ -257,6 +290,82 @@ body, html {
     transition: background-color 0.2s;
 }
 
+
+.admin .form-group {
+    margin-bottom: 1rem;
+}
+
+.admin .form-group label {
+    display: block;
+    margin-bottom: .5rem;
+}
+
+.admin .form-group input {
+    padding: .5rem;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+}
+
+.admin .form-group button {
+    padding: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #5cb85c;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.admin .form-group button:hover {
+    background-color: #4cae4c;
+}
+
+.new-user-form {
+    max-width: 400px;
+    margin: auto;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.new-user-form h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.new-user-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.new-user-form .form-group label {
+    display: block;
+    margin-bottom: .5rem;
+}
+
+.new-user-form .form-group input {
+    padding: .5rem;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+}
+
+.new-user-form .form-group button {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #5cb85c;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.new-user-form .form-group button:hover {
+    background-color: #4cae4c;
+} 
 
 @media (max-width: 768px) {
     .card {

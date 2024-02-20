@@ -7,6 +7,7 @@
     <title>Login</title>
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="icon" href="/static/images/favicon.ico">
+    <script src="/static/js/login.js"></script>
 </head>
 
 <body>
@@ -41,68 +42,6 @@
             </form>
         </div>
     </div>
-    <script>
-        function handleLogin(event) {
-            event.preventDefault();
-            const form = document.getElementById('loginForm');
-            fetch(form.action, {
-                method: 'POST',
-                body: JSON.stringify({
-                    email: form.email.value,
-                    password: form.password.value
-                })
-            })
-            .then(response => {
-                if(response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Invalid login credentials');
-                }
-            })
-            .then(data => {
-                // Save JWT in localStorage
-                localStorage.setItem('jwt', data.token);
-                window.location.href = '/menu'; // Redirect on successful login
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('loginWarning').style.display = 'block'; // Show warning message
-            });
-        }
-    </script>
-
-    <script>
-        function handleLogin(event) {
-            event.preventDefault();
-            const form = document.getElementById('loginForm');
-            fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: form.email.value,
-                    password: form.password.value
-                
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = '/menu';
-                } else {
-                    document.getElementById('loginWarning').style.display = 'block';
-                    setTimeout(() => {
-                        document.getElementById('loginWarning').style.display = 'none';
-                    }, 1000);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-    </script>
-
     <footer class="footer">
         Contato: <a href="mailto:email@example.com">email@example.com</a> | <a href="https://api.whatsapp.com/send/?phone=5521975445554&text=Cadastro&type=phone_number&app_absent=0">+123 456 7890</a>
     </footer>

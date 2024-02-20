@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="/static/images/favicon.ico">
+    <script src="/static/js/admin.js"></script>
+</head>
+
+<body>
+
+    <header class="header">
+        <img src="/static/images/logo2.png" alt="Logo" id="headerLogo">
+        <button type="button" id="logout-button" class="logout-button">Sair da conta</button>
+    </header>
+
+    <div class="body-content" id="body-content">
+
+        <div class="admin" id="admin">
+            <div class="form-group">
+                <button onclick="location.href='menu'">Menu</button>
+                <button onclick="location.href='users'">Listar Usuários</button>
+                <button onclick="loadUserForm()">Criar Usuário</button>
+            </div>
+        </div>
+        <div class="new-user-form" id="new-user-form" style="display: none;">
+            <form id="createUserForm" action="/users/create_user" class="new-user-form" onsubmit="handleCreateUser(event)">
+                <h2>Criar Usuário</h2>
+                <div class="form-group">
+                    <input type="text" id="name" name="name" placeholder="Nome" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <select id="role" name="role" required>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Cadastrar usuário</button>
+                </div>
+            </form>
+        </div>
+                    
+    </div>
+    <footer class="footer">
+        Contato: <a href="mailto:email@example.com">email@example.com</a> | <a href="https://api.whatsapp.com/send/?phone=5521975445554&text=Cadastro&type=phone_number&app_absent=0">+123 456 7890</a>
+    </footer>
+
+</body>
+
+</html>

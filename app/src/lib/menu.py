@@ -2,7 +2,7 @@ from fpdf import FPDF
 import pandas as pd
 
 from src.utils import Utils
-from src.lib.email_lib import EmailSender
+from app.src.lib.email_sender import EmailSender
 from src.database.menu import MenuDatabase
 from models.menu_models import NewMenuModel
 
@@ -44,10 +44,12 @@ class Menu(MenuDatabase):
                 self.insert_ingredient(ingredient)
             self.insert_item_ingredient(data.name, ingredient)
 
-    def create_menu(self, data: NewMenuModel):
+    def create_menu(self, data: NewMenuModel, token_data: dict):
+        print("token_data", token_data)
         relational_data = self.utils.transform_dataset(self.get_all_items_ingredients())
         menu_data = {}
         ingredients_data = {}
+        menu_name = f"Cardápio - { token_data.get('name') }"
 
         for item in data:
             menu_data[item.week_choice] = {}
@@ -92,15 +94,14 @@ class Menu(MenuDatabase):
                     }
                 }
 
-        # (subject='Test Email', body='This is a test email.', recipients=['jpblioneza@id.uff.br'])
-        self.create_table(menu_data)
-        self.email.send_email(subject="Menu", recipients=['joaopedrobzlioneza@hotmail.com'], attachment_path="menu.xlsx")
+        self.create_table(menu_data, menu_name)
+        self.email.send_media_email(subject="Menu", recipients=[token_data.get("email")], attachment_path=f'temp/{ menu_name }.xlsx')
 
         return menu_data, ingredients_data
         
 
-    def create_table(self, menu_data):
-        writer = pd.ExcelWriter('menu.xlsx', engine='xlsxwriter')
+    def create_table(self, menu_data, menu_name):
+        writer = pd.ExcelWriter(f'temp/{ menu_name }.xlsx', engine='xlsxwriter')
         monthly_ingredients = {'protein': set(), 'hortifrutti': set(), 'cold_cuts': set()}
 
         for week_choice, week_data in menu_data.items():

@@ -1,5 +1,5 @@
 import missil
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import JSONResponse
 
 from src.controller.auth import AuthController
@@ -17,12 +17,8 @@ bearer = missil.FlexibleTokenBearer(auth.token_key, auth.token_secret)
 rules = missil.make_rules(bearer, "admin", "user")
 
 @router.post("/login")
-async def login(user_data: UserLogin):    
-    if user_data:
-        email = user_data.email
-        password = user_data.password
-
-    response = await auth.authenticate_user(email, password)
+async def login(user_data: UserLogin):
+    response = await auth.authenticate_user(user_data)
     
     if response["success"]:
         return JSONResponse(content={
@@ -34,9 +30,13 @@ async def login(user_data: UserLogin):
     
     raise HTTPException(status_code=401, detail="Invalid email or password")
     
+@router.get("/verify_token")
+def verify_token(token_data: dict = Depends(auth.get_current_user)):
+    if token_data.get("success") is False:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    return JSONResponse(content=token_data, status_code=200)
 
-
-# @router.post("/register", dependencies=[rules["admin"]])
-# def register(username: str, password: str):
-#     # Your registration logic here
-#     return {"message": "Registered successfully"}
+@router.post("/register", dependencies=[rules["admin"].WRITE])
+def register(username: str, password: str):
+    # Your registration logic here
+    return {"message": "Registered successfully"}

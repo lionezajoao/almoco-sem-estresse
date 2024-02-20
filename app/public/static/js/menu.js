@@ -303,61 +303,6 @@ async function retrieveFollowUp(token) {
     return followUp;
 }
 
-function loadUserForm() {
-    const form = document.createElement("form");
-
-    const nameLabel = document.createElement("label");
-    nameLabel.setAttribute("for", "name");
-    nameLabel.textContent = "Name:";
-    form.appendChild(nameLabel);
-
-    const nameInput = document.createElement("input");
-    nameInput.setAttribute("type", "text");
-    nameInput.setAttribute("id", "name");
-    nameInput.setAttribute("name", "name");
-    nameInput.setAttribute("required", true);
-    form.appendChild(nameInput);
-
-    const emailLabel = document.createElement("label");
-    emailLabel.setAttribute("for", "email");
-    emailLabel.textContent = "Email:";
-    form.appendChild(emailLabel);
-
-    const emailInput = document.createElement("input");
-    emailInput.setAttribute("type", "email");
-    emailInput.setAttribute("id", "email");
-    emailInput.setAttribute("name", "email");
-    emailInput.setAttribute("required", true);
-    form.appendChild(emailInput);
-
-    const roleLabel = document.createElement("label");
-    roleLabel.setAttribute("for", "role");
-    roleLabel.textContent = "Role:";
-    form.appendChild(roleLabel);
-
-    const roleSelect = document.createElement("select");
-    roleSelect.setAttribute("id", "role");
-    roleSelect.setAttribute("name", "role");
-    form.appendChild(roleSelect);
-
-    const roles = ["Admin", "User", "Guest"];
-    roles.forEach(role => {
-        const option = document.createElement("option");
-        option.setAttribute("value", role.toLowerCase());
-        option.textContent = role;
-        roleSelect.appendChild(option);
-    });
-
-    const submitButton = document.createElement("button");
-    submitButton.setAttribute("type", "submit");
-    submitButton.textContent = "Submit";
-    form.appendChild(submitButton);
-
-    // Append the form to the document body or any other desired element
-    document.body.appendChild(form);
-        
-}
-
 function addFormFields(formElement, mainPlate, salad, garrison, followUp) {
     const fieldData = [
         { id: 'main-dish', data: mainPlate },

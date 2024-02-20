@@ -51,5 +51,5 @@ def add_new_item(request: MenuItemIngredientsModel, user: UserLogin = Depends(au
     return menu.handle_insert_new_item(request)
 
 @router.post("/create_menu")
-def create_menu(request: NewMenuModel, user: UserLogin = Depends(auth.get_current_user)):
-    return menu.handle_create_menu(request)
+def create_menu(request: NewMenuModel, token_data: dict = Depends(auth.get_current_user)):
+    return menu.handle_create_menu(request, token_data)
