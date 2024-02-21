@@ -205,5 +205,5 @@ function showCustomNotification(title, message, isSuccess) {
         if (container.contains(notification)) {
             container.removeChild(notification);
         }
-    }, 5000);
+    }, 2000);
 }

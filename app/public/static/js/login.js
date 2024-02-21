@@ -91,7 +91,7 @@ function handleCodeCheck(event) {
             document.getElementById('code-check-form').style.display = 'none';
             document.getElementById('new-password-form').style.display = 'block';
         } else {
-            showCustomNotification('Falha na Redefinição de Senha', 'Falha ao redefinir a senha.', false);
+            showCustomNotification('Falha na Redefinição de Senha', 'Código inválido.', false);
         }
     })
     .catch(error => {
@@ -177,5 +177,5 @@ function showCustomNotification(title, message, isSuccess) {
         if (container.contains(notification)) {
             container.removeChild(notification);
         }
-    }, 5000);
+    }, 2000);
 }

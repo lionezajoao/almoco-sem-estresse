@@ -172,7 +172,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     document.getElementById("finish-button").addEventListener("click", async function() {
         if (selectedMenus.length > 0) {
             try {
-                alert("Criando menu, aguarde...");
+                showCustomNotification("Criando menu, aguarde...", null, true);
                 const response = await fetch("/menu/create_menu", {
                     method: "POST",
                     headers: {
@@ -184,7 +184,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
                 if (response.ok) {
                     console.log("Menu added successfully!");
-                    alert("Menu enviado para o e-mail cadastrado!");
+                    showCustomNotification("Sucesso!", "Menu enviado para o e-mail cadastrado!", true);
                     
 
                     // Clear the summary boxes
@@ -198,6 +198,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                     // Reload the page
                     location.reload();
                 } else {
+                    showCustomNotification("Erro ao adicionar menu.", "Entre em contato com os administradores do sistema.", false);
                     console.log("Failed to add menu.");
                 }
             } catch (error) {
@@ -328,4 +329,50 @@ function addFormFields(formElement, mainPlate, salad, garrison, followUp) {
             console.error(`Select element with id '${field.id}' not found.`);
         }
     });
+}
+
+function showCustomNotification(title, message, isSuccess) {
+    const container = document.getElementById('notification-container');
+
+    // Creating the notification
+    const notification = document.createElement('div');
+    notification.classList.add('notification-box');
+
+    // Setting the color based on success or error
+    if (isSuccess) {
+        notification.classList.add('success');
+    } else {
+        notification.classList.add('error');
+    }
+
+    // Close button
+    const closeBtn = document.createElement('span');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.classList.add('close-btn');
+    closeBtn.onclick = function() {
+        container.removeChild(notification);
+    };
+
+    // Title
+    const notifTitle = document.createElement('h4');
+    notifTitle.textContent = title;
+
+    // Message
+    const notifMessage = document.createElement('p');
+    notifMessage.textContent = message;
+
+    // Building the notification
+    notification.appendChild(closeBtn);
+    notification.appendChild(notifTitle);
+    notification.appendChild(notifMessage);
+
+    // Adding the notification to the container
+    container.appendChild(notification);
+
+    // Auto remove the notification after 5 seconds
+    setTimeout(() => {
+        if (container.contains(notification)) {
+            container.removeChild(notification);
+        }
+    }, 2000);
 }
