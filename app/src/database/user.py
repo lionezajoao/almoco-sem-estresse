@@ -6,7 +6,7 @@ class UserDatabase(Database):
         super().__init__()
 
     def get_users(self):
-        query = "SELECT email, name FROM users"
+        query = "SELECT email, name, role FROM users"
         return self.query(query)
 
     def get_user(self, email):
@@ -31,6 +31,6 @@ class UserDatabase(Database):
         return self.query(query, params)
 
     def delete_user_by_email(self, email):
-        query = "DELETE FROM users WHERE email = %s"
+        query = "DELETE FROM users WHERE email = %s;"
         params = (email,)
-        return self.query(query, params)    
+        self.delete(query, params)

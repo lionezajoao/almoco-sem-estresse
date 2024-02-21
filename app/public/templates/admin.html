@@ -22,9 +22,12 @@
         <div class="admin" id="admin">
             <div class="form-group">
                 <button onclick="location.href='menu'">Menu</button>
-                <button onclick="location.href='users'">Listar Usuários</button>
+                <button onclick="loadUserList()">Listar Usuários</button>
                 <button onclick="loadUserForm()">Criar Usuário</button>
             </div>
+        </div>
+        <div class="users-list" id="users-list" style="display: none;">
+            <!-- Table added dinamically -->
         </div>
         <div class="new-user-form" id="new-user-form" style="display: none;">
             <form id="createUserForm" action="/users/create_user" class="new-user-form" onsubmit="handleCreateUser(event)">

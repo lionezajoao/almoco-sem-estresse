@@ -16,10 +16,10 @@ class User(UserDatabase):
     def get_encrypted_pass(self, email):
         return self.get_user_password(email)[0][0]
     
-    def update_user_password(self, email, password):
+    def update_password(self, email, password):
         return self.update_user_password(email, password)
 
-    def delete_user_by_email(self, email):
+    def delete_user(self, email):
         return self.delete_user_by_email(email)
     
     def verify_user_role(self, email: str, role: str, allowed_roles: list) -> bool:

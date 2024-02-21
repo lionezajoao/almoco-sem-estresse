@@ -2,7 +2,7 @@ from fpdf import FPDF
 import pandas as pd
 
 from src.utils import Utils
-from app.src.lib.email_sender import EmailSender
+from src.lib.email_sender import EmailSender
 from src.database.menu import MenuDatabase
 from models.menu_models import NewMenuModel
 

@@ -173,6 +173,7 @@ body, html {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    margin-bottom: 10px;
 }
 
 .card {
@@ -323,7 +324,6 @@ body, html {
 
 .new-user-form {
     max-width: 400px;
-    margin: auto;
     padding: 2rem;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -366,6 +366,234 @@ body, html {
 .new-user-form .form-group button:hover {
     background-color: #4cae4c;
 } 
+
+.users-list button {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #5cb85c;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.users-list button:hover {
+    background-color: #e90d1f;
+}
+
+.users-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.users-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.users-list th,
+.users-list td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.users-list th {
+    background-color: #f2f2f2;
+}
+
+.users-list tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.users-list tr:hover {
+    background-color: #f5f5f5;
+}
+
+
+.forgot-password-form {
+    max-width: 400px;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.forgot-password-form h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.forgot-password-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.forgot-password-form .form-group label {
+    display: block;
+    margin-bottom: .5rem;
+}
+
+.forgot-password-form .form-group input {
+    padding: .5rem;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+}
+
+.forgot-password-form .form-group button {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #5cb85c;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.forgot-password-form .form-group button:hover {
+    background-color: #4cae4c;
+} 
+
+.code-check-form {
+    max-width: 400px;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.code-check-form h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.code-check-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.code-check-form .form-group label {
+    display: block;
+    margin-bottom: .5rem;
+}
+
+.code-check-form .form-group input {
+    padding: .5rem;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+}
+
+.code-check-form .form-group button {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #5cb85c;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.code-check-form .form-group button:hover {
+    background-color: #4cae4c;
+}
+
+.new-password-form {
+    max-width: 400px;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.new-password-form h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.new-password-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.new-password-form .form-group label {
+    display: block;
+    margin-bottom: .5rem;
+}
+
+.new-password-form .form-group input {
+    padding: .5rem;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+}
+
+.new-password-form .form-group button {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #5cb85c;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.new-password-form .form-group button:hover {
+    background-color: #4cae4c;
+}
+
+.notification-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    z-index: 1000; /* Garante que a notificação esteja sempre visível */
+}
+
+.notification-box {
+    color: white;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: opacity 0.3s, bottom 0.3s;
+}
+
+/* Estilo para notificações de sucesso */
+.success {
+    background-color: #5cb85c; /* Match the rest of the project */
+}
+
+/* Estilo para notificações de erro */
+.error {
+    background-color: #d9534f; /* Match the rest of the project */
+}
+
+.notification-box h4 {
+    margin: 0 0 5px 0;
+}
+
+.notification-box p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.close-btn {
+    float: right;
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.close-btn:hover {
+    opacity: 1;
+}
+
 
 @media (max-width: 768px) {
     .card {

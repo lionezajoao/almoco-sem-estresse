@@ -25,3 +25,7 @@ def get_menu_page(request: Request):
 @router.get("/admin", response_class=HTMLResponse)
 def get_admin_page(request: Request):
     return templates.TemplateResponse("admin.html", {"request": request})
+
+@router.get("/password_reset", response_class=HTMLResponse)
+def get_password_reset_page(request: Request):
+    return templates.TemplateResponse("password_reset.html", {"request": request})

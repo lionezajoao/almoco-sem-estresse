@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 
 from src.lib.auth import Auth
 from src.lib.user import User
-from app.src.lib.email_sender import EmailSender
+from src.lib.email_sender import EmailSender
 
 class UserController:
     def __init__(self):
@@ -55,5 +55,16 @@ class UserController:
                 new_password = self.auth.hash_password(data.password)
                 self.update_user_password(data.name, new_password)
                 return JSONResponse(content={"message": "Password updated successfully"}, status_code=200)
+            raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    def handle_delete_user(self, email, token_data):
+        if self.user.verify_user_role(token_data.get("email"), token_data.get("role"), self.scope):
+            if self.user.get_user(email):
+                try:
+                    self.user.delete_user(email)
+                    return JSONResponse(content={"success": True, "message": "User deleted successfully"}, status_code=200)
+                except Exception as e:
+                    raise HTTPException(status_code=500, detail=f"Internal Server Error: { e }")
             raise HTTPException(status_code=404, detail="User not found")
         raise HTTPException(status_code=401, detail="Unauthorized")

@@ -1,9 +1,9 @@
 import missil
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Header
 from fastapi.responses import JSONResponse
 
 from src.controller.auth import AuthController
-from models.user_models import UserLogin, UserCreate
+from models.user_models import UserLogin, UserBase
 
 router = APIRouter(
     prefix="/auth",
@@ -35,6 +35,25 @@ def verify_token(token_data: dict = Depends(auth.get_current_user)):
     if token_data.get("success") is False:
         raise HTTPException(status_code=401, detail="Invalid token")
     return JSONResponse(content=token_data, status_code=200)
+
+@router.get("/verify_code")
+def check_code(code: str = Header(...)):
+    return JSONResponse(content=auth.check_code(code))
+
+@router.post("/send_password_reset")
+async def password_reset(data: UserBase):
+    response = await auth.send_password_reset(data.email)
+    return JSONResponse(content=response, status_code=response.get("status_code"))
+
+@router.post("/reset_password")
+async def reset_password(data: UserLogin):
+    response = await auth.reset_password(data.email, data.password)
+    return JSONResponse(content=response, status_code=response.get("status_code"))
+
+@router.post("/email_confirmation")
+async def email_confirmation(data: UserBase):
+    response = await auth.confirm_email(data.email)
+    return JSONResponse(content=response, status_code=response.get("status_code"))
 
 @router.post("/register", dependencies=[rules["admin"].WRITE])
 def register(username: str, password: str):
