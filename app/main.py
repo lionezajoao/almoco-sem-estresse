@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 
 from router import menu, user, base, auth
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None)
 app.mount(
     "/static",
     StaticFiles(directory=Path(__file__).parent.absolute() / "public/static"),
