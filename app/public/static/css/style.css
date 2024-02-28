@@ -98,6 +98,22 @@ body, html {
     /* Adjust the size of your logo */
 }
 
+.body-content .login-index button {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #5cb85c;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.body-content .login-index button:hover {
+    background-color: #4cae4c;
+}
+
 .footer {
     background-color: #f8f8f8;
     padding: 1em;
@@ -592,6 +608,51 @@ body, html {
 
 .close-btn:hover {
     opacity: 1;
+}
+
+.new-dish-form {
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.new-dish-form h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.new-dish-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.new-dish-form .form-group label {
+    display: block;
+    margin-bottom: .5rem;
+}
+
+.new-dish-form .form-group input,
+.new-dish-form .form-group select {
+    padding: .5rem;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+}
+
+.new-dish-form .form-group button {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #5cb85c;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.new-dish-form .form-group button:hover {
+    background-color: #4cae4c;
 }
 
 

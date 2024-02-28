@@ -11,6 +11,7 @@ class Utils:
                     "proteína": [],
                     "hortifruti": [],
                     "frio": [],
+                    "mercearia": []
                     # Add other categories as needed based on your dataset
                 }
 

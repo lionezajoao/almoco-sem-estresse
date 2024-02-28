@@ -1,9 +1,10 @@
+import textwrap
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 
-from src.lib.auth import Auth
-from src.lib.user import User
-from src.lib.email_sender import EmailSender
+from app.src.lib.auth import Auth
+from app.src.lib.user import User
+from app.src.lib.email_sender import EmailSender
 
 class UserController:
     def __init__(self):
@@ -41,11 +42,26 @@ class UserController:
             
             hashed_password = self.auth.hash_password(data.password)
             self.user.insert_new_user(data.name, data.email, hashed_password, data.role)
-            email_msg = f"""
-            Olá!
-            Seja bem-vindo ao nosso sistema! Sua senha provisória é: { data.password } . Recomendamos que você altere sua senha assim que possível.
-            """
-            self.email.send_text_email(subject="Senha provisória", recipients=[data.email], body=email_msg)
+            email_text = """
+            <html>
+                <body>
+                    <p>Olá, {name}! Seja muito bem-vinda ao ALMOÇO SEM ESTRESSE! 🧡<br><br>
+                    A partir de agora você pode planejar cardápios de forma rápida e simples.<br><br>
+                    Vou te passar algumas informações importantes sobre seu acesso ok?<br><br><br>
+                    Para acessar a ferramenta geradora de cardápios, basta clicar nesse link:
+                    Uma senha será solicitada. Esta é sua senha provisória:<br><br>
+                    Senha: {password}<br><br>
+                    Recomendamos que você faça a alteração no primeiro acesso.<br><br>
+                    Pronto, agora é só escolher os pratos e montar seus cardápios.<br><br>
+                    Se tiver alguma dúvida ou precisar de suporte, você pode nos contactar pela área de membros nesse link:<br>
+                    ou pelo email: suporte@almocosemestresse.com.br</p><br>
+                    <p>Abraços,</p>
+                    <p>Melina</p>
+                    <p>Instagram | <a href="https://www.instagram.com/demaesparamaes/">@demaesparamaes</a></p>
+                </body>
+            </html>
+            """.format(name=data.name, password=data.password)
+            self.email.send_text_email(subject="Senha provisória", recipients=[data.email], body=email_text, html=True)
             return JSONResponse(content={ "success": True, "message": "User added successfully"}, status_code=200)
         raise HTTPException(status_code=401, detail="Unauthorized")
     

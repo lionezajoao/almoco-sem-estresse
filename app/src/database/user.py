@@ -1,5 +1,5 @@
-from src.database.base import Database
 import uuid
+from app.src.database.base import Database
 
 class UserDatabase(Database):
     def __init__(self):

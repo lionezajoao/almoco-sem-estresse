@@ -1,4 +1,5 @@
-from src.database.base import Database
+import uuid
+from app.src.database.base import Database
 
 class MenuDatabase(Database):
     def __init__(self):
@@ -75,19 +76,19 @@ class MenuDatabase(Database):
         AND ing.type IS NOT NULL;"""
         return self.query(query)
     
-    def insert_item(self, name: str):
-        query = "INSERT INTO items (name) VALUES (%s)"
-        params = (name,)
+    def insert_item(self, name: str, ingredient_type: str):
+        query = "INSERT INTO items (_id, name, type) VALUES (%s, %s, %s)"
+        params = (str(uuid.uuid4()), name, ingredient_type,)
         self.insert(query, params)
 
-    def insert_ingredient(self, name: str):
-        query = "INSERT INTO ingredients (name) VALUES (%s)"
-        params = (name,)
+    def insert_ingredient(self, name: str, ingredient_type: str):
+        query = "INSERT INTO ingredients (_id, name, type) VALUES (%s, %s, %s)"
+        params = (str(uuid.uuid4()), name, ingredient_type,)
         self.insert(query, params)
 
     def insert_item_ingredient(self, item_name: str, ingredient_name: str):
         query = """
-        INSERT INTO menu_items (menu_id, item_id)
+        INSERT INTO item_ingredients (menu_id, item_id)
         VALUES (
             (SELECT _id FROM items WHERE name = %s),
             (SELECT _id FROM ingredients WHERE name = %s)

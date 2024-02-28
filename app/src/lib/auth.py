@@ -1,13 +1,14 @@
 import os
 import jwt
-from dotenv import load_dotenv
-from passlib.context import CryptContext
-from src.utils import Utils
-from src.lib.user import User
-from src.lib.email_sender import EmailSender
+import bcrypt
+
 from datetime import datetime, timedelta
 
-load_dotenv()
+from app.src.utils import Utils
+from app.src.lib.user import User
+from app.src.lib.email_sender import EmailSender
+
+
 
 class Auth:
     def __init__(self):
@@ -16,13 +17,14 @@ class Auth:
         self.email = EmailSender()
         self.token_key = os.environ.get("TOKEN_KEY")
         self.token_secret = os.environ.get("SECRET_KEY")
-        self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-    def verify_password(self, plain_password: str, hashed_password: str) -> bool:
-        return self.pwd_context.verify(plain_password, hashed_password)
-    
-    def hash_password(self, pwd: str) -> str:
-        return self.pwd_context.hash(pwd)
+    def hash_password(self, password: str) -> str:
+        salt = bcrypt.gensalt()
+        hashed_password = bcrypt.hashpw(password.encode(), salt)
+        return hashed_password.decode()
+
+    def verify_password(self, password: str, hashed_password: str) -> bool:
+        return bcrypt.checkpw(password.encode(), hashed_password.encode())
     
     async def get_user_auth(self, email: str, password: str):
         user_data = self.user.get_user_by_email(email)

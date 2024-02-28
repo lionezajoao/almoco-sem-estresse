@@ -2,11 +2,11 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.controller.auth import AuthController
-from src.controller.menu import MenuController
+from app.src.controller.auth import AuthController
+from app.src.controller.menu import MenuController
 
-from models.user_models import UserLogin
-from models.menu_models import NewMenuModel, MenuItemIngredientsModel
+from app.models.user_models import UserLogin
+from app.models.menu_models import NewMenuModel, MenuItemIngredientsModel
 
 router = APIRouter(
     prefix="/menu",
@@ -47,8 +47,8 @@ def get_ingredients(name: str, user: UserLogin = Depends(auth.get_current_user))
     return menu.handle_ingredients_from_item(name)
 
 @router.post("/add_new_item")
-def add_new_item(request: MenuItemIngredientsModel, user: UserLogin = Depends(auth.get_current_user)):
-    return menu.handle_insert_new_item(request)
+def add_new_item(request: MenuItemIngredientsModel, token_data: UserLogin = Depends(auth.get_current_user)):
+    return menu.handle_insert_new_item(request, token_data)
 
 @router.post("/create_menu")
 def create_menu(request: NewMenuModel, token_data: dict = Depends(auth.get_current_user)):

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 
-from src.controller.user import UserController
-from src.controller.auth import AuthController
-from models.user_models import UserBase, UserCreate
+from app.src.controller.user import UserController
+from app.src.controller.auth import AuthController
+from app.models.user_models import UserBase, UserCreate
 
 router = APIRouter(
     prefix="/users",

@@ -1,12 +1,15 @@
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse 
 
-from src.lib.menu import Menu
-from models.menu_models import MenuItemIngredientsModel
+from app.src.lib.menu import Menu
+from app.src.lib.user import User
+from app.models.menu_models import MenuItemIngredientsModel
 
 class MenuController:
     def __init__(self):
         self.menu = Menu()
+        self.user = User()
+        self.scope = ["admin"]
 
     def handle_all_items(self):
         return JSONResponse(content=self.menu.get_all_items(), status_code=200)
@@ -35,22 +38,26 @@ class MenuController:
             return JSONResponse(content=data, status_code=200)
         raise HTTPException(status_code=404, detail="Item not found")
     
-    def handle_insert_new_item(self, data: MenuItemIngredientsModel):
+    def handle_insert_new_item(self, data: MenuItemIngredientsModel, token_data: dict):
+        if not self.user.verify_user_role(token_data.get("email"), token_data.get("role"), self.scope):
+            raise HTTPException(status_code=401, detail="Unauthorized")
         try:
             item_check = self.menu.get_item_by_name(data.name)
             if item_check:
                 raise HTTPException(status_code=400, detail="Item already exists")
             
-            self.menu.insert_item(data.name)
+            self.menu.insert_item(data.name, data.type)
 
             for ingredient in data.ingredients:
-                if not self.menu.check_if_ingredient_exists(ingredient):
-                    self.menu.insert_ingredient(ingredient)
-                self.menu.insert_item_ingredient(data.name, ingredient)
+                if not self.menu.check_if_ingredient_exists(ingredient.name):
+                    self.menu.insert_ingredient(ingredient.name, ingredient.type)
+                self.menu.insert_item_ingredient(data.name, ingredient.name)
 
-            return JSONResponse(content={"message": "Item added successfully"}, status_code=200)
+            return JSONResponse(content={"success": True, "message": "Item added successfully"}, status_code=200)
         
         except Exception as e:
+            print(e)
+            self.menu.rollback()
             raise HTTPException(status_code=500, detail=f"Something went wrong: {e}")
         
     def handle_create_menu(self, request, token_data):

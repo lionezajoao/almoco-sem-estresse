@@ -1,9 +1,9 @@
 from fastapi import Header, HTTPException
 from fastapi.responses import JSONResponse
 
-from src.utils import Utils
-from src.lib.auth import Auth
-from models.user_models import UserLogin
+from app.src.utils import Utils
+from app.src.lib.auth import Auth
+from app.models.user_models import UserLogin
 
 class AuthController(Auth):
     def __init__(self):

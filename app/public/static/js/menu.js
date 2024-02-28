@@ -1,4 +1,10 @@
 document.addEventListener("DOMContentLoaded", async function() {
+
+    document.getElementById("logout-button").addEventListener("click", function() {
+        sessionStorage.removeItem("jwt");
+        window.location.href = "/login";
+    });
+
     const jwt = sessionStorage.getItem("jwt");
     if (!jwt) {
         window.location.href = "/login";
@@ -32,11 +38,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     const followUp = await retrieveFollowUp(jwt);
     const subscribeButton = document.getElementById("add-menu-button");
 
-    document.getElementById("logout-button").addEventListener("click", function() {
-        sessionStorage.removeItem("jwt");
-        window.location.href = "/login";
-    });
-
     addFormFields(document.getElementById("card-container").querySelector('.card'), mainPlate, salad, garrison, followUp);
 
     let boxCount = 0; // Counter for the number of summary boxes
@@ -45,6 +46,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     let weekChoice;
 
     document.getElementById("add-week-button").addEventListener("click", function() {
+        
         weekChoice = document.getElementById("week-selector").value;
         const weekDay = document.getElementById("week-day").value;
 
@@ -130,16 +132,11 @@ document.addEventListener("DOMContentLoaded", async function() {
 
                 // Add the menu object to the week menu data
                 weekMenuObj.data.push(menu);
-            } else {
-                console.log("Maximum number of summary boxes reached.");
             }
-        } else {
-            console.log("Week choice and weekday are required to add a box.");
         }
     });
     
     document.getElementById("add-menu-button").addEventListener("click", function() {
-        console.log(weekMenu);
 
         document.getElementById("week-selector").querySelector(`option[value="${weekChoice}"]`).remove();
         const weekDays = ["mon", "tue", "wed", "thu", "fri"];
@@ -170,9 +167,10 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     // Add button and code to submit the menu to the backend
     document.getElementById("finish-button").addEventListener("click", async function() {
+        showCustomNotification("Criando menu, aguarde...", null, true);
         if (selectedMenus.length > 0) {
             try {
-                showCustomNotification("Criando menu, aguarde...", null, true);
+                // showCustomNotification("Criando menu, aguarde...", null, true);
                 const response = await fetch("/menu/create_menu", {
                     method: "POST",
                     headers: {
@@ -183,7 +181,6 @@ document.addEventListener("DOMContentLoaded", async function() {
                 });
 
                 if (response.ok) {
-                    console.log("Menu added successfully!");
                     showCustomNotification("Sucesso!", "Menu enviado para o e-mail cadastrado!", true);
                     
 
@@ -199,13 +196,10 @@ document.addEventListener("DOMContentLoaded", async function() {
                     location.reload();
                 } else {
                     showCustomNotification("Erro ao adicionar menu.", "Entre em contato com os administradores do sistema.", false);
-                    console.log("Failed to add menu.");
                 }
             } catch (error) {
                 console.error("An error occurred while adding the menu:", error);
             }
-        } else {
-            console.log("No menus to add.");
         }
     });
 });

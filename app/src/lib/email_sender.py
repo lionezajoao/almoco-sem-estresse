@@ -1,10 +1,11 @@
+import os
+import textwrap
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
-from dotenv import load_dotenv
-import os
-load_dotenv()
+
+
 
 class EmailSender:
     def __init__(self, use_tls=True):
@@ -14,26 +15,28 @@ class EmailSender:
         self.password = os.getenv('SMTP_PASSWORD')
         self.use_tls = use_tls
 
-    def send_text_email(self, subject, recipients, body):
+    def send_text_email(self, subject, recipients, body, html=False):
         msg = MIMEText(body)
+        if html:
+            msg = MIMEMultipart('alternative')
+            msg.attach(MIMEText(body, 'html'))
         msg['Subject'] = subject
         msg['From'] = self.username
         msg['To'] = ', '.join(recipients)
 
         self.send_email(msg)
 
-        
-
-    def send_media_email(self, subject, recipients, attachment_path):
-        msg = MIMEMultipart()
+    def send_media_email(self, subject, recipients, attachment_paths, body=None):
+        msg = MIMEMultipart(body)
         msg['Subject'] = subject
         msg['From'] = self.username
         msg['To'] = ', '.join(recipients)
 
-        with open(attachment_path, 'rb') as file:
-            part = MIMEApplication(file.read(), Name=attachment_path.split("/")[-1])
-            part['Content-Disposition'] = f'attachment; filename="{ attachment_path.split("/")[-1] }"'
-            msg.attach(part)
+        for attachment_path in attachment_paths:
+            with open(attachment_path, 'rb') as file:
+                part = MIMEApplication(file.read(), Name=attachment_path.split("/")[-1])
+                part['Content-Disposition'] = f'attachment; filename="{ attachment_path.split("/")[-1] }"'
+                msg.attach(part)
 
         self.send_email(msg)
 

@@ -1,7 +1,7 @@
 import os
 import psycopg2
-from dotenv import load_dotenv
-load_dotenv()
+
+
 
 class Database:
     def __init__(self):
@@ -29,6 +29,9 @@ class Database:
     def delete(self, query, params=None):
         self.cur.execute(query, params)
         self.commit()
+
+    def rollback(self):
+        self.conn.rollback()
 
     def commit(self):
         self.conn.commit()

@@ -2,8 +2,8 @@ import missil
 from fastapi import APIRouter, HTTPException, Depends, Header
 from fastapi.responses import JSONResponse
 
-from src.controller.auth import AuthController
-from models.user_models import UserLogin, UserBase
+from app.src.controller.auth import AuthController
+from app.models.user_models import UserLogin, UserBase
 
 router = APIRouter(
     prefix="/auth",

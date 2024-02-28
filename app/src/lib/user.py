@@ -1,4 +1,4 @@
-from src.database.user import UserDatabase
+from app.src.database.user import UserDatabase
 
 class User(UserDatabase):
     def __init__(self):

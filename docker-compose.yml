@@ -1,9 +1,12 @@
 version: '3'
 services:
-  web:
-    image: nginx:latest
-    ports:
-      - 80:80
+  prod:
+    build:
+      context: .
+      dockerfile: prod.Dockerfile
     volumes:
-      - ./path/to/your/web/files:/usr/share/nginx/html
-    restart: always
+      - .:/usr/src/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env

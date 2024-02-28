@@ -38,10 +38,12 @@ async function handleToken() {
 function loadUserForm() {
     document.getElementById("new-user-form").style.display = "block";
     document.getElementById("users-list").style.display = "none";
+    document.getElementById("new-dish-form").style.display = "none";
 }
 
 async function loadUserList() {
     document.getElementById("new-user-form").style.display = "none";
+    document.getElementById("new-dish-form").style.display = "none";
     
     const jwt = await handleToken();
     const table = document.getElementById("users-list");
@@ -79,7 +81,6 @@ async function loadUserList() {
 
     const buttons = document.querySelectorAll(".delete-user");
     buttons.forEach((button, index) => {
-        console.log(button, index);
         button.addEventListener("click", function() {
             handleDeleteUser(response[index][0]);
         });
@@ -100,11 +101,11 @@ async function handleDeleteUser(userEmail) {
     })
     .then(response => response.json());
 
-    console.log(response);
-
     if (response.success) {
         showCustomNotification("Usuário removido com sucesso!", null, true);
-        window.location.reload();
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
     } else {
         showCustomNotification("Erro ao remover usuário. Tente novamente.", null, false);
     }
@@ -126,8 +127,6 @@ async function handleCreateUser(event) {
         password: generateRandomPassword(Math.floor(Math.random() * 10) + 8)
     }
 
-    console.log(data);
-
     const response = await fetch("/users/create_user", {
         method: "POST",
         headers: {
@@ -137,7 +136,6 @@ async function handleCreateUser(event) {
         body: JSON.stringify(data)
     })
     .then(response => response.json());
-    console.log({ response });
 
     if (response.success) {
         showCustomNotification("Usuário criado com sucesso!", null, true);
@@ -151,8 +149,104 @@ async function handleCreateUser(event) {
     
 }
 
+function addIngredientField() {
+    const container = document.getElementById('ingredient-fields-container');
+    container.style.display = 'block';
+
+    const groupDiv = document.createElement('div');
+    groupDiv.className = 'form-group';
+
+    const ingredientInput = document.createElement('input');
+    ingredientInput.type = 'text';
+    ingredientInput.name = 'ingredientName';
+    ingredientInput.placeholder = 'Ingrediente';
+    ingredientInput.required = true;
+    groupDiv.appendChild(ingredientInput);
+
+    const typeInput = document.createElement('select');
+    typeInput.id = 'ingredient-type';
+    typeInput.name = 'ingredient-type';
+    typeInput.required = true;
+
+    const options = [
+        { value: 'Frios', text: 'Frios' },
+        { value: 'Proteína', text: 'Proteína' },
+        { value: 'Hortifruti', text: 'Hortifruti' },
+        { value: 'Mercearia', text: 'Mercearia' }
+    ];
+
+    options.forEach(option => {
+        const newOption = document.createElement('option');
+        newOption.value = option.value;
+        newOption.text = option.text;
+        typeInput.appendChild(newOption);
+    });
+
+    groupDiv.appendChild(typeInput);
+
+    container.appendChild(groupDiv);
+}
+
+
+
+function loadNewItemForm(event) {
+    const form = document.getElementById("new-dish-form");
+    document.getElementById("users-list").style.display = "none";
+    document.getElementById("new-user-form").style.display = "none";
+
+    form.style.display = "block";
+
+    form.addEventListener("submit", handleNewItem(event));
+
+}
+
+async function handleNewItem(event) {
+    event.preventDefault();
+    showCustomNotification("Criando novo item, aguarde...", null, false);
+
+    const jwt = await handleToken();
+    const name = document.getElementById("dishName").value;
+    const dishType = document.getElementById("dishType").value;
+    const ingredients = document.getElementsByName("ingredientName");
+    const ingredientTypes = document.getElementsByName("ingredient-type");
+
+    const ingredientList = [];
+    for (let i = 0; i < ingredients.length; i++) {
+        ingredientList.push({
+            name: ingredients[i].value,
+            type: ingredientTypes[i].value
+        });
+    }
+
+    const data = {
+        name,
+        type: dishType,
+        ingredients: ingredientList
+    }
+
+    const response = await fetch("/menu/add_new_item", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "token": jwt,
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json());
+
+    if (response.success) {
+        showCustomNotification("Item criado com sucesso!", null, true);
+                
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    } else {
+        showCustomNotification("Erro ao criar item. Tente novamente.", null, false);
+    }
+}
+
 function generateRandomPassword(length) {
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}[]|:;<>,.?/";
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$&";
     let password = "";
     for (let i = 0; i < length; i++) {
         const randomIndex = Math.floor(Math.random() * characters.length);

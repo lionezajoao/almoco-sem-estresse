@@ -16,7 +16,7 @@
         <img src="/static/images/logo2.png" alt="Logo" id="headerLogo">
         <button type="button" id="logout-button" class="logout-button">Sair da conta</button>
     </header>
-
+    <div id="notification-container" class="notification-container"></div>
     <div class="body-content" id="body-content">
 
         <div class="admin" id="admin">
@@ -24,6 +24,7 @@
                 <button onclick="location.href='menu'">Menu</button>
                 <button onclick="loadUserList()">Listar Usuários</button>
                 <button onclick="loadUserForm()">Criar Usuário</button>
+                <button onclick="loadNewItemForm()">Adicionar Prato</button>
             </div>
         </div>
         <div class="users-list" id="users-list" style="display: none;">
@@ -49,10 +50,32 @@
                 </div>
             </form>
         </div>
+        <div class="new-dish-form" id="new-dish-form" style="display: none;">
+            <form id="createDishForm" action="/menu/create_dish" class="new-dish-form" onsubmit="handleNewItem(event)">
+                <h2>Adicionar Prato</h2>
+                <div class="form-group">
+                    <input type="text" id="dishName" name="dishName" placeholder="Nome do Prato" required>
+                    <select id="dishType" name="dishType" required>
+                        <option value="Prato principal">Prato principal</option>
+                        <option value="Guarnição">Guarnição</option>
+                        <option value="Acompanhamento">Acompanhamento</option>
+                        <option value="Salada">Salada</option>
+                    </select>
+                </div>
+                <div id="ingredient-fields-container" style="display: none;"></div> <!-- Container for dynamic fields -->
+                <div class="form-group">
+                    <button type="button" id="add-ingredient-button" onclick="addIngredientField()">Adicionar Ingrediente</button>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Adicionar Prato</button>
+                </div>
+            </form>
+        </div>
+        
                     
     </div>
     <footer class="footer">
-        Contato: <a href="mailto:email@example.com">email@example.com</a> | <a href="https://api.whatsapp.com/send/?phone=5521975445554&text=Cadastro&type=phone_number&app_absent=0">+123 456 7890</a>
+        Contato: <a href="mailto:suporte@almocosemestresse.com.br">suporte@almocosemestresse.com.br</a> | <a href="https://api.whatsapp.com/send/?phone=5531972394438&app_absent=0">+55 31 97239-4438</a>
     </footer>
 
 </body>
