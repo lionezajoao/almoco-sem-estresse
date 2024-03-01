@@ -1,4 +1,5 @@
-version: '3'
+version: "3.3"
+
 services:
   traefik:
     image: "traefik:v2.10"
@@ -22,14 +23,25 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./letsencrypt:/letsencrypt"
-  prod:
-    image: lionezajoao/nutri-website-prod
-    build:
-      context: .
-      dockerfile: prod.Dockerfile
+  app:
+    image: lionezajoao/nutri-website:latest
+    build: .
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
     volumes:
       - .:/usr/src/app
-    ports:
-      - "8000:8000"
-    env_file:
-      - .env
+
+    networks:
+      - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.web.entrypoints=web"
+      - "traefik.http.services.app.loadbalancer.server.port=8000"
+      - "traefik.http.routers.web.entrypoints=websecure"
+      - "traefik.http.routers.web.tls.certresolver=leresolver"
+networks:
+  default:
+    driver: overlay

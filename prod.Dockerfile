@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.11-slim
+FROM python:3.11
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
@@ -11,7 +11,8 @@ RUN pip install pipenv
 COPY Pipfile Pipfile.lock ./
 
 # Install dependencies from the Pipfile
-RUN pipenv install
+RUN pipenv install --system --deploy
+RUN pipenv install python-docx
 
 # Copy the rest of your application's code
 COPY . .
