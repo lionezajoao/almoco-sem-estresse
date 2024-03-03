@@ -41,15 +41,6 @@ jobs:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USERNAME }}
           password: ${{ secrets.VM_PASSWORD }}
-        - name: Pull docker image
-          run: docker pull ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest
-
-        - name: Update Docker Swarm Service
-          uses: appleboy/ssh-action@master
-          with:
-            host: ${{ secrets.VM_HOST }}
-            username: ${{ secrets.VM_USERNAME }}
-            password: ${{ secrets.VM_PASSWORD }}
-            script: |
-              docker service update --image ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest nutri-website-prod_prod
-
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest
+            docker service update --image ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest nutri-website-prod_prod
