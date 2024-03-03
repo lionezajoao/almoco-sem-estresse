@@ -42,5 +42,5 @@ jobs:
           username: ${{ secrets.VM_USERNAME }}
           password: ${{ secrets.VM_PASSWORD }}
           script: |
-            docker service update --image ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest nutri_website_app
+            docker service update --image ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest nutri-website-prod
 
