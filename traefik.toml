@@ -1,16 +1,21 @@
 [entryPoints]
-  [entryPoints.web]
-    address = ":80"
-  [entryPoints.websecure]
-    address = ":443"
+    [entryPoints.web]
+        address = ":80"
+    [entryPoints.websecure]
+        address = ":443"
+    [entryPoints.service]
+        address = ":8000"
 
 [providers.docker]
-  endpoint = "unix:///var/run/docker.sock"
-  exposedByDefault = false
-  network = "traefik_public"
+    endpoint = "unix:///var/run/docker.sock"
+    exposedByDefault = false
+    network = "traefik_public"
 
 [certificatesResolvers.myresolver.acme]
-  email = "joaopedrobzlioneza@gmail.com"
-  storage = "/letsencrypt/acme.json"
-  [certificatesResolvers.myresolver.acme.httpChallenge]
-    entryPoint = "web"
+    email = "joaopedrobzlioneza@gmail.com"
+    storage = "/letsencrypt/acme.json"
+    [certificatesResolvers.myresolver.acme.httpChallenge]
+        entryPoint = "web"
+
+[api]
+    dashboard = true
