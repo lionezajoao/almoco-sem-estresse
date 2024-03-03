@@ -27,7 +27,7 @@ openpyxl = "*"
 [dev-packages]
 
 [scripts]
-prod = "python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir app"
+prod = "python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"
 dev = "python -m uvicorn app.main:app --host localhost --port 8000 --reload --env-file .env.dev"
 
 [requires]
