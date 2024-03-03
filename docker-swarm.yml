@@ -16,7 +16,7 @@ services:
       replicas: 1
 
   prod:
-    image: lionezajoao/nutri-website-prod
+    image: lionezajoao/nutri-website-prod:latest
     volumes:
       - .:/usr/src/app
     ports:
@@ -40,6 +40,6 @@ services:
 
 networks:
   default:
-    external:
-      name: traefik_public
+    # external:
+    #   name: traefik_public
     driver: overlay
