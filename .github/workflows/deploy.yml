@@ -34,3 +34,13 @@ jobs:
 
       - name: push docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest
+
+      - name: Update Docker Swarm Service
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USERNAME }}
+          password: ${{ secrets.VM_PASSWORD }}
+          script: |
+            docker service update --image ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest nutri_website_app
+
