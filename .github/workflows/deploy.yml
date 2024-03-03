@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Log in to Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
@@ -28,19 +31,20 @@ jobs:
           echo "TOKEN_KEY=${{ secrets.TOKEN_KEY }}" >> .env
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
 
-      - uses: actions/checkout@v2
-      - name: build docker image
+      - name: Build docker image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest -f prod.Dockerfile .
 
-      - name: push docker image
+      - name: Push docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest
 
-      - name: Update Docker Swarm Service
+      - name: Transfer docker-swarm.yml to VM and Update Docker Swarm Service
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USERNAME }}
           password: ${{ secrets.VM_PASSWORD }}
           script: |
+            cd /nutri-website
+            git pull
             docker pull ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest
             docker service update --image ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest nutri-website-prod_prod
