@@ -44,7 +44,8 @@ jobs:
           username: ${{ secrets.VM_USERNAME }}
           password: ${{ secrets.VM_PASSWORD }}
           script: |
-            cd ~/root/nutri-website
+            cd ~/nutri-website
             git pull
+            cd
             docker pull ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest
             docker service update --image ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest nutri-website-prod_prod
