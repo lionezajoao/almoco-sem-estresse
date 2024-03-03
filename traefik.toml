@@ -1,10 +1,12 @@
 [entryPoints]
     [entryPoints.web]
         address = ":80"
+        [entryPoints.web.http.redirections]
+            [entryPoints.web.http.redirections.entryPoint]
+                to = "websecure"
+                scheme = "https"
     [entryPoints.websecure]
         address = ":443"
-    [entryPoints.service]
-        address = ":8000"
 
 [providers.docker]
     endpoint = "unix:///var/run/docker.sock"
@@ -19,3 +21,7 @@
 
 [api]
     dashboard = true
+    insecure = true
+
+[log]
+    level = "DEBUG"
