@@ -48,19 +48,25 @@ class UserController:
                     <p>Olá, {name}! Seja muito bem-vinda ao ALMOÇO SEM ESTRESSE! 🧡<br><br>
                     A partir de agora você pode planejar cardápios de forma rápida e simples.<br><br>
                     Vou te passar algumas informações importantes sobre seu acesso ok?<br><br><br>
-                    Para acessar a ferramenta geradora de cardápios, basta clicar nesse link:
+                    Para acessar a ferramenta geradora de cardápios, basta clicar nesse link: {website}
                     Uma senha será solicitada. Esta é sua senha provisória:<br><br>
                     Senha: {password}<br><br>
                     Recomendamos que você faça a alteração no primeiro acesso.<br><br>
                     Pronto, agora é só escolher os pratos e montar seus cardápios.<br><br>
-                    Se tiver alguma dúvida ou precisar de suporte, você pode nos contactar pela área de membros nesse link:<br>
+                    Se tiver alguma dúvida ou precisar de suporte, você pode nos contactar pela área de membros nesse link: {whatsapp}<br>
                     ou pelo email: suporte@almocosemestresse.com.br</p><br>
                     <p>Abraços,</p>
                     <p>Melina</p>
                     <p>Instagram | <a href="https://www.instagram.com/demaesparamaes/">@demaesparamaes</a></p>
                 </body>
             </html>
-            """.format(name=data.name, password=data.password)
+            """.format(
+                name=data.name,
+                password=data.password,
+                website="https://almoçosemestresse.app.br",
+                whatsapp="https://api.whatsapp.com/send/?phone=5531972394438&app_absent=0"
+            )
+            
             self.email.send_text_email(subject="Senha provisória", recipients=[data.email], body=email_text, html=True)
             return JSONResponse(content={ "success": True, "message": "User added successfully"}, status_code=200)
         raise HTTPException(status_code=401, detail="Unauthorized")
