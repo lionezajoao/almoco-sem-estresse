@@ -151,15 +151,32 @@ class Menu(MenuDatabase):
             df.to_excel(writer, sheet_name=f"Semana {week_choice}", index=False)
 
             # Create a sheet for week ingredients
-            week_ingredients = set()
+            week_ingredients = {
+                "protein": set(),
+                "hortifrutti": set(),
+                "cold_cuts": set(),
+                "grocery": set(),
+            }
             for day_data in week_data.values():
                 for ingredient_type in ['protein', 'hortifrutti', 'cold_cuts', 'grocery']:
-                    week_ingredients.update(day_data["main_dish"]["ingredients"].get(ingredient_type, []) + day_data["salad"]["ingredients"].get(ingredient_type, []) + day_data["side_dish"]["ingredients"].get(ingredient_type, []) + day_data["accompaniment"]["ingredients"].get(ingredient_type, []))
+                    week_ingredients[ingredient_type].update(day_data["main_dish"]["ingredients"].get(ingredient_type, []) + day_data["salad"]["ingredients"].get(ingredient_type, []) + day_data["side_dish"]["ingredients"].get(ingredient_type, []) + day_data["accompaniment"]["ingredients"].get(ingredient_type, []))
 
-            week_ingredients_df = pd.DataFrame(week_ingredients, columns=["Ingredientes"])
+            week_length = max(len(week_ingredients["protein"]), len(week_ingredients["hortifrutti"]), len(week_ingredients["cold_cuts"]), len(week_ingredients["grocery"]))
+            week_proteins = list(week_ingredients["protein"]) + [None] * (week_length - len(week_ingredients["protein"]))
+            week_hortifruti = list(week_ingredients["hortifrutti"]) + [None] * (week_length - len(week_ingredients["hortifrutti"]))
+            week_cold_cuts = list(week_ingredients["cold_cuts"]) + [None] * (week_length - len(week_ingredients["cold_cuts"]))
+            week_grocery = list(week_ingredients["grocery"]) + [None] * (week_length - len(week_ingredients["grocery"]))
+            
+            week_ingredients_data = {
+                "Proteína": week_proteins,
+                "Hortifruti": week_hortifruti,
+                "Frios": week_cold_cuts,
+                "Mercearia": week_grocery
+            }
+            week_ingredients_df = pd.DataFrame(week_ingredients_data, columns=["Proteína", "Hortifruti", "Frios", "Mercearia"])
             week_ingredients_df.to_excel(writer, sheet_name=f"Ingredientes Semana {week_choice}", index=False)
 
-        max_length = max(len(monthly_ingredients["protein"]), len(monthly_ingredients["hortifrutti"]), len(monthly_ingredients["cold_cuts"]))
+        max_length = max(len(monthly_ingredients["protein"]), len(monthly_ingredients["hortifrutti"]), len(monthly_ingredients["cold_cuts"]), len(monthly_ingredients["grocery"]))
 
         # Extend the shorter lists with None to match the max_length
         proteins = list(monthly_ingredients["protein"]) + [None] * (max_length - len(monthly_ingredients["protein"]))
@@ -229,6 +246,8 @@ class Menu(MenuDatabase):
         all_sheet_names = dataframe.keys()
 
         for sheet_name in all_sheet_names:
+            if sheet_name.startswith("Ingredientes Semana"):
+                continue
             doc = Document()
 
             header = doc.sections[0].header
