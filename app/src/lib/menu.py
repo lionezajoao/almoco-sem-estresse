@@ -101,6 +101,7 @@ class Menu(MenuDatabase):
                 }
 
         table_data = self.create_table(menu_data, menu_name)
+        
         self.create_docx(table_data, f'temp/{ menu_name }.docx')
         self.email.send_media_email(subject="Menu", recipients=[token_data.get("email")], attachment_paths=[f'temp/{ menu_name }.docx', f'temp/{ menu_name }.xlsx'])
 
@@ -212,25 +213,26 @@ class Menu(MenuDatabase):
 
     def create_docx(self, dataframe: pd.DataFrame, name: str):
         all_sheet_names = dataframe.keys()
-        doc = Document()
-
-        # Add image to the header
-        header = doc.sections[0].header
-        header_image_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))),"public","static","images","logo2.png")
-
-        header_paragraph = header.paragraphs[0]
-        run = header_paragraph.add_run()
-        run.add_picture(header_image_path, width=Inches(2))  # Adjust the width as needed
-        run.font.size = Pt(12)  # Adjust the font size as needed
-
-        doc.add_heading('Resumo do Cardápio Semanal', level=1)
 
         for sheet_name in all_sheet_names:
+            doc = Document()
+
+            header = doc.sections[0].header
+            header_image_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))),"public","static","images","logo2.png")
+
+            header_paragraph = header.paragraphs[0]
+            run = header_paragraph.add_run()
+            run.add_picture(header_image_path, width=Inches(2))
+            run.font.size = Pt(12)
+
+            doc.add_heading('Resumo do Cardápio Semanal', level=1)
+            
             df_week = dataframe[sheet_name]
             if sheet_name == "Ingredientes do Mês":
-                doc.add_page_break()
                 self.add_table_from_df(df_week, doc)
             else:
                 self.create_paragraph(doc, sheet_name, df_week)
+                doc.add_page_break()
+                self.add_table_from_df(df_week, doc)
 
-        doc.save(name)
+            doc.save(f"temp/{name} - {sheet_name}.docx")

@@ -48,12 +48,12 @@ class UserController:
                     <p>Olá, {name}! Seja muito bem-vinda ao ALMOÇO SEM ESTRESSE! 🧡<br><br>
                     A partir de agora você pode planejar cardápios de forma rápida e simples.<br><br>
                     Vou te passar algumas informações importantes sobre seu acesso ok?<br><br><br>
-                    Para acessar a ferramenta geradora de cardápios, basta clicar nesse link: {website}
+                    Para acessar a ferramenta geradora de cardápios, basta clicar nesse link: <a href="{website}">Almoço Sem Estresse</a><br><br>
                     Uma senha será solicitada. Esta é sua senha provisória:<br><br>
                     Senha: {password}<br><br>
                     Recomendamos que você faça a alteração no primeiro acesso.<br><br>
                     Pronto, agora é só escolher os pratos e montar seus cardápios.<br><br>
-                    Se tiver alguma dúvida ou precisar de suporte, você pode nos contactar pela área de membros nesse link: {whatsapp}<br>
+                    Se tiver alguma dúvida ou precisar de suporte, você pode nos contactar pela área de membros nesse link: <a href="{whatsapp}">WhatsApp</a><br><br>
                     ou pelo email: suporte@almocosemestresse.com.br</p><br>
                     <p>Abraços,</p>
                     <p>Melina</p>
