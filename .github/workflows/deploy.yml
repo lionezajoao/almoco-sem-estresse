@@ -30,6 +30,7 @@ jobs:
           echo "SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}" >> .env
           echo "TOKEN_KEY=${{ secrets.TOKEN_KEY }}" >> .env
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+          echo "HOTMART_TOKEN=${{ secrets.HOTMART_TOKEN }}" >> .env
 
       - name: Build docker image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest -f prod.Dockerfile .
