@@ -50,89 +50,97 @@ document.addEventListener("DOMContentLoaded", async function() {
         weekChoice = document.getElementById("week-selector").value;
         const weekDay = document.getElementById("week-day").value;
 
-        if (weekChoice && weekDay) { // Check if weekChoice and weekDay are not empty
-            if (boxCount < 5) { // Check if the maximum number of boxes has been reached
-                const weekday = handleWeekDay(weekDay);
-                const mainDish = document.getElementById("main-dish").value;
-                const salad = document.getElementById("salad").value;
-                const sideDish = document.getElementById("side-dish").value;
-                const accompaniment = document.getElementById("accompaniment").value;
+        if (!weekChoice) {
+            showCustomNotification("Erro", "Selecione uma semana.", false);
+            return;
+        }
 
-                // Create a new menu object
-                const menu = {
-                    weekday: weekDay,
-                    main_dish: mainDish,
-                    salad: salad,
-                    side_dish: sideDish,
-                    accompaniment: accompaniment
-                };
+        if (!weekDay) {
+            showCustomNotification("Erro", "Selecione um dia da semana.", false);
+            return;
+        }
 
-                // Create a new box
-                const contentBox = document.createElement("div");
-                contentBox.classList.add("summary-box");
+        if (boxCount < 5) {
+            const weekday = handleWeekDay(weekDay);
+            const mainDish = document.getElementById("main-dish").value;
+            const salad = document.getElementById("salad").value;
+            const sideDish = document.getElementById("side-dish").value;
+            const accompaniment = document.getElementById("accompaniment").value;
 
-                // Create the content for the box
-                let content = `
-                    <div class="content-item">
-                        <p>Semana: ${weekChoice}</p>
-                        <p>Dia da semana: ${weekday}</p>
-                        <p>Prato Principal: ${mainDish}</p>
-                        <p>Salada: ${salad}</p>
-                        <p>Guarnição: ${sideDish}</p>
-                        <p>Acompanhamento: ${accompaniment}</p>
-                        <button class="delete-button">Remover</button>
-                    </div>
-                `;
+            // Create a new menu object
+            const menu = {
+                weekday: weekDay,
+                main_dish: mainDish,
+                salad: salad,
+                side_dish: sideDish,
+                accompaniment: accompaniment
+            };
 
-                // Set the content as the innerHTML of the box
-                contentBox.innerHTML = content;
+            // Create a new box
+            const contentBox = document.createElement("div");
+            contentBox.classList.add("summary-box");
 
-                // Append the box to the summary container
-                document.getElementById("boxes-container").appendChild(contentBox);
-                subscribeButton.style.display = "block";
-                const weekDaySelect = document.getElementById("week-day");
-                const selectedOption = weekDaySelect.querySelector(`option[value="${weekDay}"]`);
-                selectedOption.remove();
+            // Create the content for the box
+            let content = `
+                <div class="content-item">
+                    <p>Semana: ${weekChoice}</p>
+                    <p>Dia da semana: ${weekday}</p>
+                    <p>Prato Principal: ${mainDish}</p>
+                    <p>Salada: ${salad}</p>
+                    <p>Guarnição: ${sideDish}</p>
+                    <p>Acompanhamento: ${accompaniment}</p>
+                    <button class="delete-button">Remover</button>
+                </div>
+            `;
 
-                // Add event listener to delete button
-                const deleteButton = contentBox.querySelector(".delete-button");
-                deleteButton.addEventListener("click", function() {
-                    contentBox.remove();
-                    boxCount--; // Decrease the box count when a box is removed
-                    if (boxCount === 0) {
-                        subscribeButton.style.display = "none";
-                    }
+            // Set the content as the innerHTML of the box
+            contentBox.innerHTML = content;
 
-                    // Return the week day to the dropdown menu
-                    const optionElement = document.createElement("option");
-                    optionElement.value = weekDay;
-                    optionElement.text = handleWeekDay(weekDay);
-                    document.getElementById("week-day").appendChild(optionElement);
-                });
+            // Append the box to the summary container
+            document.getElementById("boxes-container").appendChild(contentBox);
+            subscribeButton.style.display = "block";
+            const weekDaySelect = document.getElementById("week-day");
+            const selectedOption = weekDaySelect.querySelector(`option[value="${weekDay}"]`);
+            selectedOption.remove();
 
-                boxCount++; // Increase the box count when a box is added
-
-                // Clear the form fields
-                document.getElementById("main-dish").value = "";
-                document.getElementById("salad").value = "";
-                document.getElementById("side-dish").value = "";
-                document.getElementById("accompaniment").value = "";
-
-                // Find the week menu object for the selected week choice
-                let weekMenuObj = weekMenu.find(obj => obj.week_choice === weekChoice);
-
-                // If the week menu object does not exist, create a new one
-                if (!weekMenuObj) {
-                    weekMenuObj = {
-                        week_choice: weekChoice,
-                        data: []
-                    };
-                    weekMenu.push(weekMenuObj);
+            // Add event listener to delete button
+            const deleteButton = contentBox.querySelector(".delete-button");
+            deleteButton.addEventListener("click", function() {
+                contentBox.remove();
+                boxCount--; // Decrease the box count when a box is removed
+                if (boxCount === 0) {
+                    subscribeButton.style.display = "none";
                 }
 
-                // Add the menu object to the week menu data
-                weekMenuObj.data.push(menu);
+                // Return the week day to the dropdown menu
+                const optionElement = document.createElement("option");
+                optionElement.value = weekDay;
+                optionElement.text = handleWeekDay(weekDay);
+                document.getElementById("week-day").appendChild(optionElement);
+            });
+
+            boxCount++; // Increase the box count when a box is added
+
+            // Clear the form fields
+            document.getElementById("main-dish").value = "";
+            document.getElementById("salad").value = "";
+            document.getElementById("side-dish").value = "";
+            document.getElementById("accompaniment").value = "";
+
+            // Find the week menu object for the selected week choice
+            let weekMenuObj = weekMenu.find(obj => obj.week_choice === weekChoice);
+
+            // If the week menu object does not exist, create a new one
+            if (!weekMenuObj) {
+                weekMenuObj = {
+                    week_choice: weekChoice,
+                    data: []
+                };
+                weekMenu.push(weekMenuObj);
             }
+
+            // Add the menu object to the week menu data
+            weekMenuObj.data.push(menu);
         }
     });
     
@@ -181,19 +189,17 @@ document.addEventListener("DOMContentLoaded", async function() {
                 });
 
                 if (response.ok) {
-                    showCustomNotification("Sucesso!", "Menu enviado para o e-mail cadastrado!", true);
+                    showCustomNotification("Sucesso!", "Cardápio enviado para o e-mail cadastrado!", true);
                     
-
-                    // Clear the summary boxes
                     document.getElementById("boxes-container").innerHTML = "";
                     boxCount = 0;
                     subscribeButton.style.display = "none";
 
-                    // Clear the selectedMenus array
                     selectedMenus = [];
 
-                    // Reload the page
-                    location.reload();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
                 } else {
                     showCustomNotification("Erro ao adicionar menu.", "Entre em contato com os administradores do sistema.", false);
                 }

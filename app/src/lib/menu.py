@@ -114,9 +114,9 @@ class Menu(MenuDatabase):
 
         self.email.send_media_email(subject="Menu", recipients=[token_data.get("email")], attachment_paths=files_list)
 
-        docx_file_path = f'temp/{menu_name}.docx'
-        if os.path.exists(docx_file_path):
-            os.remove(docx_file_path)
+        for file in files_list:
+            if os.path.exists(file):
+                os.remove(file)
         
 
         return menu_data, ingredients_data
@@ -266,7 +266,7 @@ class Menu(MenuDatabase):
             elif sheet_name.startswith("Semana"):
                 self.create_paragraph(doc, sheet_name, df_week)
                 doc.add_page_break()
-                df_week = dataframe[f"Ingredientes Semana {sheet_name.split(' ')[1]}"]
+                df_week = dataframe[f"Ingredientes Semana {sheet_name.split(' ')[-1]}"]
                 self.add_table_from_df(df_week, doc)
 
             doc.save(f"{name} - {sheet_name}.docx")
