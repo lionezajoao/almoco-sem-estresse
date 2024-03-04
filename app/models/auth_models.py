@@ -1,107 +1,107 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 class AuthModel(BaseModel):
-    id: str
-    creation_date: int
-    event: str
-    version: str
-    data: dict
+    id: Optional[str]
+    creation_date: Optional[int]
+    event: Optional[str]
+    version: Optional[str]
+    data: Optional[dict]
 
 class AddressModel(BaseModel):
-    country: str
-    country_iso: str
+    country: Optional[str]
+    country_iso: Optional[str]
 
 class BuyerModel(BaseModel):
     email: str
     name: str
-    checkout_phone: str
-    address: AddressModel
+    checkout_phone: Optional[str]
+    address: Optional[AddressModel]
 
 class CommissionModel(BaseModel):
-    value: float
-    source: str
-    currency_value: str
+    value: Optional[float]
+    source: Optional[str]
+    currency_value: Optional[str]
 
 class FullPriceModel(BaseModel):
-    value: float
-    currency_value: str
+    value: Optional[float]
+    currency_value: Optional[str]
 
 class PriceModel(BaseModel):
-    value: float
-    currency_value: str
+    value: Optional[float]
+    currency_value: Optional[str]
 
 class CheckoutCountryModel(BaseModel):
-    name: str
-    iso: str
+    name: Optional[str]
+    iso: Optional[str]
 
 class OrderBumpModel(BaseModel):
-    is_order_bump: bool
-    parent_purchase_transaction: str
+    is_order_bump: Optional[bool]
+    parent_purchase_transaction: Optional[str]
 
 class OriginalOfferPriceModel(BaseModel):
-    value: float
-    currency_value: str
+    value: Optional[float]
+    currency_value: Optional[str]
 
 class PaymentModel(BaseModel):
-    installments_number: int
-    type: str
+    installments_number: Optional[int]
+    type: Optional[str]
 
 class OfferModel(BaseModel):
-    code: str
+    code: Optional[str]
 
 class PlanModel(BaseModel):
-    id: int
-    name: str
+    id: Optional[int]
+    name: Optional[str]
 
 class SubscriberModel(BaseModel):
-    code: str
+    code: Optional[str]
 
 class ProductModel(BaseModel):
-    id: int
-    ucode: str
-    name: str
-    has_co_production: bool
+    id: Optional[int]
+    ucode: Optional[str]
+    name: Optional[str]
+    has_co_production: Optional[bool]
 
 class AffiliateModel(BaseModel):
-    affiliate_code: str
-    name: str
+    affiliate_code: Optional[str]
+    name: Optional[str]
 
 class ProducerModel(BaseModel):
-    name: str
+    name: Optional[str]
 
 class SubscriptionModel(BaseModel):
-    status: str
-    plan: PlanModel
-    subscriber: SubscriberModel
+    status: Optional[str]
+    plan: Optional[PlanModel]
+    subscriber: Optional[SubscriberModel]
 
 class PurchaseModel(BaseModel):
-    approved_date: int
-    full_price: FullPriceModel
-    price: PriceModel
-    checkout_country: CheckoutCountryModel
-    order_bump: OrderBumpModel
-    original_offer_price: OriginalOfferPriceModel
-    order_date: int
-    status: str
-    transaction: str
-    payment: PaymentModel
-    offer: OfferModel
-    sckPaymentLink: str
+    approved_date: Optional[int]
+    full_price: Optional[FullPriceModel]
+    price: Optional[PriceModel]
+    checkout_country: Optional[CheckoutCountryModel]
+    order_bump: Optional[OrderBumpModel]
+    original_offer_price: Optional[OriginalOfferPriceModel]
+    order_date: Optional[int]
+    status: Optional[str]
+    transaction: Optional[str]
+    payment: Optional[PaymentModel]
+    offer: Optional[OfferModel]
+    sckPaymentLink: Optional[str]
 
 class DataModel(BaseModel):
-    product: ProductModel
-    affiliates: List[AffiliateModel]
+    product: Optional[ProductModel]
+    affiliates: Optional[List[AffiliateModel]]
     buyer: BuyerModel
-    producer: ProducerModel
-    commissions: List[CommissionModel]
-    purchase: PurchaseModel
-    subscription: SubscriptionModel
+    producer: Optional[ProducerModel]
+    commissions: Optional[List[CommissionModel]]
+    purchase: Optional[PurchaseModel]
+    subscription: Optional[SubscriptionModel]
 
 class HotmartModel(BaseModel):
-    id: str
-    creation_date: int
-    event: str
-    version: str
+    id: Optional[str]
+    creation_date: Optional[int]
+    event: Optional[str]
+    version: Optional[str]
     data: DataModel
     hottok: str
