@@ -103,7 +103,12 @@ class Menu(MenuDatabase):
         table_data = self.create_table(menu_data, menu_name)
         
         self.create_docx(table_data, f'temp/{ menu_name }.docx')
-        self.email.send_media_email(subject="Menu", recipients=[token_data.get("email")], attachment_paths=[f'temp/{ menu_name }.docx', f'temp/{ menu_name }.xlsx'])
+
+        temp_list = os.listdir('temp')
+        files_list = temp_list.filter(lambda x: menu_name in x)
+        files_list = [f'temp/{file}' for file in files_list]
+
+        self.email.send_media_email(subject="Menu", recipients=[token_data.get("email")], attachment_paths=files_list)
 
         docx_file_path = f'temp/{menu_name}.docx'
         if os.path.exists(docx_file_path):
