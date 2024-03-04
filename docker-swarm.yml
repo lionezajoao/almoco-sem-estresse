@@ -40,8 +40,8 @@ services:
 
 networks:
   default:
-    # external:
-    #   name: traefik_public
+    external:
+      name: traefik_public
     driver: overlay
   labels:
     - "traefik.enable=true"

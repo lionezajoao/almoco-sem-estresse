@@ -37,7 +37,7 @@ jobs:
       - name: Push docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest
 
-      - name: Transfer docker-swarm.yml to VM and Update Docker Swarm Service
+      - name: Update Docker Swarm Service and Pull Changes
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VM_HOST }}
