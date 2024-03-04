@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException, Depends, Header
 from fastapi.responses import JSONResponse
 
 from app.src.controller.auth import AuthController
+from app.models.auth_models import HotmartModel
 from app.models.user_models import UserLogin, UserBase
 
 router = APIRouter(
@@ -29,7 +30,7 @@ async def login(user_data: UserLogin):
         }, status_code=200)
     
     raise HTTPException(status_code=401, detail="Invalid email or password")
-    
+
 @router.get("/verify_token")
 def verify_token(token_data: dict = Depends(auth.get_current_user)):
     if token_data.get("success") is False:
@@ -55,7 +56,3 @@ async def email_confirmation(data: UserBase):
     response = await auth.confirm_email(data.email)
     return JSONResponse(content=response, status_code=response.get("status_code"))
 
-@router.post("/register", dependencies=[rules["admin"].WRITE])
-def register(username: str, password: str):
-    # Your registration logic here
-    return {"message": "Registered successfully"}

@@ -17,6 +17,7 @@ class Auth:
         self.email = EmailSender()
         self.token_key = os.environ.get("TOKEN_KEY")
         self.token_secret = os.environ.get("SECRET_KEY")
+        self.hotmart_token = os.environ.get("HOTMART_TOKEN")
 
     def hash_password(self, password: str) -> str:
         salt = bcrypt.gensalt()
@@ -25,6 +26,9 @@ class Auth:
 
     def verify_password(self, password: str, hashed_password: str) -> bool:
         return bcrypt.checkpw(password.encode(), hashed_password.encode())
+    
+    def verify_hotmart_token(self, token: str) -> bool:
+        return token == self.hotmart_token
     
     async def get_user_auth(self, email: str, password: str):
         user_data = self.user.get_user_by_email(email)

@@ -1,3 +1,6 @@
+import random
+import string
+
 class Utils:
     def __init__(self) -> None:
         pass
@@ -24,6 +27,15 @@ class Utils:
                     transformed_dataset[dish][category_key] = [ingredient]
 
         return transformed_dataset
+    
+    def generate_random_password(self, length):
+        
+        characters = string.ascii_letters + string.digits + "!@#$&"
+        password = ""
+        for _ in range(length):
+            random_index = random.randint(0, len(characters) - 1)
+            password += characters[random_index]
+        return password
     
     def handle_week_day(self, week_day):
         switcher = {

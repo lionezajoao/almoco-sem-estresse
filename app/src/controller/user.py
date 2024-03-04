@@ -1,15 +1,18 @@
-import textwrap
+import random
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 
+from app.src.utils import Utils
 from app.src.lib.auth import Auth
 from app.src.lib.user import User
 from app.src.lib.email_sender import EmailSender
+from app.models.auth_models import HotmartModel
 
 class UserController:
     def __init__(self):
         self.user = User()
         self.auth = Auth()
+        self.utils = Utils()
         self.email = EmailSender()
         self.scope = ["admin"]
 
@@ -90,3 +93,46 @@ class UserController:
                     raise HTTPException(status_code=500, detail=f"Internal Server Error: { e }")
             raise HTTPException(status_code=404, detail="User not found")
         raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    def handle_hotmart_webhook(self, data: HotmartModel):
+        email = data.data.buyer.email
+        name = data.data.buyer.name
+        token = data.hottok
+
+        if not self.auth.verify_hotmart_token(token):
+            raise HTTPException(status_code=401, detail="Invalid token")
+        
+        if self.user.get_user(email):
+            raise HTTPException(status_code=400, detail="User already exists")
+        
+        password = self.utils.generate_random_password(random.randint(8, 17))
+
+        hashed_password = self.auth.hash_password(password)
+        self.user.insert_new_user(name, email, hashed_password, "user")
+        email_text = """
+        <html>
+            <body>
+                <p>Olá, {name}! Seja muito bem-vinda ao ALMOÇO SEM ESTRESSE! 🧡<br><br>
+                A partir de agora você pode planejar cardápios de forma rápida e simples.<br><br>
+                Vou te passar algumas informações importantes sobre seu acesso ok?<br><br><br>
+                Para acessar a ferramenta geradora de cardápios, basta clicar nesse link: <a href="{website}">Almoço Sem Estresse</a><br><br>
+                Uma senha será solicitada. Esta é sua senha provisória:<br><br>
+                Senha: {password}<br><br>
+                Recomendamos que você faça a alteração no primeiro acesso.<br><br>
+                Pronto, agora é só escolher os pratos e montar seus cardápios.<br><br>
+                Se tiver alguma dúvida ou precisar de suporte, você pode nos contactar pela área de membros nesse link: <a href="{whatsapp}">WhatsApp</a><br><br>
+                ou pelo email: suporte@almocosemestresse.com.br</p><br>
+                <p>Abraços,</p>
+                <p>Melina</p>
+                <p>Instagram | <a href="https://www.instagram.com/demaesparamaes/">@demaesparamaes</a></p>
+            </body>
+        </html>
+        """.format(
+            name=name,
+            password=password,
+            website="https://almoçosemestresse.app.br",
+            whatsapp="https://api.whatsapp.com/send/?phone=5531972394438&app_absent=0"
+        )
+            
+        self.email.send_text_email(subject="Senha provisória", recipients=[email], body=email_text, html=True)
+        return JSONResponse(content={ "success": True, "message": "User added successfully"}, status_code=200)

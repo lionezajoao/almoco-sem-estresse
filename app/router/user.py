@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 
 from app.src.controller.user import UserController
 from app.src.controller.auth import AuthController
+from app.models.auth_models import HotmartModel
 from app.models.user_models import UserBase, UserCreate
 
 router = APIRouter(
@@ -42,3 +43,7 @@ def update_user_password(email: str, token_data: dict = Depends(auth.get_current
 @router.delete("/delete_user")
 def delete_user_by_email(data: UserBase, token_data: dict = Depends(auth.get_current_user)):
     return user.handle_delete_user(data.email, token_data)
+
+@router.post("/hotmart_webhook")
+def hotmart_webhook(data: HotmartModel):
+    return user.handle_hotmart_webhook(data)
