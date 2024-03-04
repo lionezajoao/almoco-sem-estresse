@@ -104,6 +104,10 @@ class Menu(MenuDatabase):
         
         self.create_docx(table_data, f'temp/{ menu_name }.docx')
 
+        excel_file_path = f'temp/{menu_name}.xlsx'
+        if os.path.exists(excel_file_path):
+            os.remove(excel_file_path)
+
         temp_list = os.listdir('temp')
         files_list = [file for file in temp_list if menu_name in file]
         files_list = [f'temp/{file}' for file in files_list]
@@ -113,10 +117,6 @@ class Menu(MenuDatabase):
         docx_file_path = f'temp/{menu_name}.docx'
         if os.path.exists(docx_file_path):
             os.remove(docx_file_path)
-
-        excel_file_path = f'temp/{menu_name}.xlsx'
-        if os.path.exists(excel_file_path):
-            os.remove(excel_file_path)
         
 
         return menu_data, ingredients_data
@@ -149,6 +149,15 @@ class Menu(MenuDatabase):
             columns = ["Dia da Semana", "Prato Principal", "Salada", "Acompanhamento", "Guarnição", "Ingredientes Prato Principal", "Ingredientes Salada", "Ingredientes Acompanhamento", "Ingredientes Guarnição"]
             df = pd.DataFrame(table_data, columns=columns)
             df.to_excel(writer, sheet_name=f"Semana {week_choice}", index=False)
+
+            # Create a sheet for week ingredients
+            week_ingredients = set()
+            for day_data in week_data.values():
+                for ingredient_type in ['protein', 'hortifrutti', 'cold_cuts', 'grocery']:
+                    week_ingredients.update(day_data["main_dish"]["ingredients"].get(ingredient_type, []) + day_data["salad"]["ingredients"].get(ingredient_type, []) + day_data["side_dish"]["ingredients"].get(ingredient_type, []) + day_data["accompaniment"]["ingredients"].get(ingredient_type, []))
+
+            week_ingredients_df = pd.DataFrame(week_ingredients, columns=["Ingredientes"])
+            week_ingredients_df.to_excel(writer, sheet_name=f"Ingredientes Semana {week_choice}", index=False)
 
         max_length = max(len(monthly_ingredients["protein"]), len(monthly_ingredients["hortifrutti"]), len(monthly_ingredients["cold_cuts"]))
 
@@ -238,6 +247,7 @@ class Menu(MenuDatabase):
             else:
                 self.create_paragraph(doc, sheet_name, df_week)
                 doc.add_page_break()
+                df_week = dataframe[f"Ingredientes Semana {sheet_name.split(' ')[1]}"]
                 self.add_table_from_df(df_week, doc)
 
             doc.save(f"{name} - {sheet_name}.docx")
