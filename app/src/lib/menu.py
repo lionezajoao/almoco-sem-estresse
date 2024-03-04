@@ -235,4 +235,4 @@ class Menu(MenuDatabase):
                 doc.add_page_break()
                 self.add_table_from_df(df_week, doc)
 
-            doc.save(f"temp/{name} - {sheet_name}.docx")
+            doc.save(f"{name} - {sheet_name}.docx")
