@@ -34,20 +34,20 @@ services:
       - "traefik.http.routers.web.rule=PathPrefix(`/`)"
       - "traefik.http.routers.web.entrypoints=web"
       - "traefik.http.services.app.loadbalancer.server.port=8000"
-      - "traefik.http.routers.web.rule=Host(`xn--almoosemestresse-fpb.app.br/`)"
+      - "traefik.http.routers.web.rule=Host(`xn--almoosemestresse-fpb.app.br`)"
       - "traefik.http.routers.web.entrypoints=websecure"
       - "traefik.http.routers.web.tls.certresolver=leresolver"
 
-  # whoami:
-  #   image: "traefik/whoami"
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.whoami.rule=Host(`xn--almoosemestresse-fpb.app.br`)"
-  #     - "traefik.http.routers.whoami.entrypoints=websecure"
-  #     - "traefik.http.routers.whoami.tls.certresolver=myresolver"
-  #   deploy:
-  #     mode: replicated
-  #     replicas: 1
+  whoami:
+    image: "traefik/whoami"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`xn--almoosemestresse-fpb.app.br`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls.certresolver=myresolver"
+    deploy:
+      mode: replicated
+      replicas: 1
 
 
 networks:
