@@ -38,16 +38,19 @@ services:
       mode: replicated
       replicas: 1
 
+
 networks:
   default:
     external:
       name: traefik_public
     driver: overlay
-  labels:
-    - "traefik.enable=true"
-    - "traefik.http.routers.web.rule=PathPrefix(`/`)"
-    - "traefik.http.routers.web.entrypoints=web"
-    - "traefik.http.services.app.loadbalancer.server.port=8000"
-    - "traefik.http.routers.web.rule=Host(`xn--almoosemestresse-fpb.app.br/`)"
-    - "traefik.http.routers.web.entrypoints=websecure"
-    - "traefik.http.routers.web.tls.certresolver=leresolver"
+  services:
+    traefik:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.web.rule=PathPrefix(`/`)"
+        - "traefik.http.routers.web.entrypoints=web"
+        - "traefik.http.services.app.loadbalancer.server.port=8000"
+        - "traefik.http.routers.web.rule=Host(`xn--almoosemestresse-fpb.app.br/`)"
+        - "traefik.http.routers.web.entrypoints=websecure"
+        - "traefik.http.routers.web.tls.certresolver=leresolver"
