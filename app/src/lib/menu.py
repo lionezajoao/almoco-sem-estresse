@@ -105,7 +105,7 @@ class Menu(MenuDatabase):
         self.create_docx(table_data, f'temp/{ menu_name }.docx')
 
         temp_list = os.listdir('temp')
-        files_list = temp_list.filter(lambda x: menu_name in x)
+        files_list = [file for file in temp_list if menu_name in file]
         files_list = [f'temp/{file}' for file in files_list]
 
         self.email.send_media_email(subject="Menu", recipients=[token_data.get("email")], attachment_paths=files_list)
