@@ -244,7 +244,7 @@ class Menu(MenuDatabase):
             df_week = dataframe[sheet_name]
             if sheet_name == "Ingredientes do Mês":
                 self.add_table_from_df(df_week, doc)
-            else:
+            elif sheet_name.startswith("Semana"):
                 self.create_paragraph(doc, sheet_name, df_week)
                 doc.add_page_break()
                 df_week = dataframe[f"Ingredientes Semana {sheet_name.split(' ')[1]}"]
