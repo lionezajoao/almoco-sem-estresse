@@ -23,12 +23,16 @@ class AuthController(Auth):
     
     async def confirm_email(self, email: str):
         return await self.send_email_confirmation(email)
-    
+
     async def send_password_reset(self, email: str):
         return await self.send_reset_password_email(email)
 
     def check_code(self, code: str):
         return self.verify_code(code)
+    
+    def check_hotmart_token(self, x_hotmart_hottok: str = Header(...)):
+        if not self.verify_hotmart_token(x_hotmart_hottok):
+            raise HTTPException(status_code=401, detail="Invalid token")
     
     async def reset_password(self, email: str, password: str):
         return await self.change_password(email, password)

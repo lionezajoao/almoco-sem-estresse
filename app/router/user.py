@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header
 
 from app.src.controller.user import UserController
 from app.src.controller.auth import AuthController
@@ -45,5 +45,5 @@ def delete_user_by_email(data: UserBase, token_data: dict = Depends(auth.get_cur
     return user.handle_delete_user(data.email, token_data)
 
 @router.post("/hotmart_webhook")
-def hotmart_webhook(data: HotmartModel):
+def hotmart_webhook(data: HotmartModel, x_hotmart_hottok: bool = Depends(auth.check_hotmart_token)):
     return user.handle_hotmart_webhook(data)

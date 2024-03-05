@@ -97,10 +97,6 @@ class UserController:
     def handle_hotmart_webhook(self, data: HotmartModel):
         email = data.data.buyer.email
         name = data.data.buyer.name
-        token = data.hottok
-
-        if not self.auth.verify_hotmart_token(token):
-            raise HTTPException(status_code=401, detail="Invalid token")
         
         if self.user.get_user(email):
             raise HTTPException(status_code=400, detail="User already exists")

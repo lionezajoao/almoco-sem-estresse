@@ -97,4 +97,3 @@ class HotmartModel(BaseModel):
     event: Optional[str] = None
     version: Optional[str] = None
     data: DataModel
-    hottok: str
