@@ -28,7 +28,7 @@ class UserDatabase(Database):
     def update_user_password(self, email, password):
         query = "UPDATE users SET password = %s WHERE email = %s"
         params = (password, email)
-        return self.query(query, params)
+        return self.update(query, params)
 
     def delete_user_by_email(self, email):
         query = "DELETE FROM users WHERE email = %s;"

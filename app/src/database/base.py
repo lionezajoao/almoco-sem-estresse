@@ -26,6 +26,10 @@ class Database:
         self.cur.execute(query, params)
         self.commit()
 
+    def update(self, query, params=None):
+        self.cur.execute(query, params)
+        self.commit()
+
     def delete(self, query, params=None):
         self.cur.execute(query, params)
         self.commit()

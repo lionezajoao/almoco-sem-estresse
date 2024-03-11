@@ -16,7 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-let email = '';
+let codeCheck = '';
 
 function handleLogin(event) {
     event.preventDefault();
@@ -88,6 +88,7 @@ function handleCodeCheck(event) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            codeCheck = form.code.value;
             document.getElementById('code-check-form').style.display = 'none';
             document.getElementById('new-password-form').style.display = 'block';
         } else {
@@ -101,6 +102,10 @@ function handleCodeCheck(event) {
 
 function handleNewPassword(event) {
     event.preventDefault();
+    if (codeCheck === '') {
+        showCustomNotification('Falha na Redefinição de Senha', 'Código inválido.', false);
+        return;
+    }
     const form = document.getElementById('new-password-form');
 
     if (form.password.value !== form.passwordConfirm.value) {
@@ -111,6 +116,7 @@ function handleNewPassword(event) {
     fetch(form.action, {
         method: 'POST',
         headers: {
+            'code': codeCheck,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({

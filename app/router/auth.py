@@ -47,7 +47,9 @@ async def password_reset(data: UserBase):
     return JSONResponse(content=response, status_code=response.get("status_code"))
 
 @router.post("/reset_password")
-async def reset_password(data: UserLogin):
+async def reset_password(data: UserLogin, code: str = Header(...)):
+    if not auth.check_code(code):
+        raise HTTPException(status_code=401, detail="Invalid code")
     response = await auth.reset_password(data.email, data.password)
     return JSONResponse(content=response, status_code=response.get("status_code"))
 

@@ -15,13 +15,13 @@ class Auth:
         self.user = User()
         self.utils = Utils()
         self.email = EmailSender()
+        self.salt = os.environ.get("SALT").encode()
         self.token_key = os.environ.get("TOKEN_KEY")
         self.token_secret = os.environ.get("SECRET_KEY")
         self.hotmart_token = os.environ.get("HOTMART_TOKEN")
 
     def hash_password(self, password: str) -> str:
-        salt = bcrypt.gensalt()
-        hashed_password = bcrypt.hashpw(password.encode(), salt)
+        hashed_password = bcrypt.hashpw(password.encode(), self.salt)
         return hashed_password.decode()
 
     def verify_password(self, password: str, hashed_password: str) -> bool:

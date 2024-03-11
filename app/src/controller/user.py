@@ -74,15 +74,6 @@ class UserController:
             return JSONResponse(content={ "success": True, "message": "User added successfully"}, status_code=200)
         raise HTTPException(status_code=401, detail="Unauthorized")
     
-    def handle_new_password(self, data, token_data):
-        if self.user.verify_user_role(token_data.get("email"), token_data.get("role"), self.scope):
-            if self.user.get_user(data.email):
-                new_password = self.auth.hash_password(data.password)
-                self.update_user_password(data.name, new_password)
-                return JSONResponse(content={"message": "Password updated successfully"}, status_code=200)
-            raise HTTPException(status_code=404, detail="User not found")
-        raise HTTPException(status_code=401, detail="Unauthorized")
-    
     def handle_delete_user(self, email, token_data):
         if self.user.verify_user_role(token_data.get("email"), token_data.get("role"), self.scope):
             if self.user.get_user(email):

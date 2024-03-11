@@ -36,10 +36,6 @@ def get_user_password_by_email(email: str, token_data: dict = Depends(auth.get_c
 def add_new_user(request: UserCreate, token_data: dict = Depends(auth.get_current_user)):
     return user.handle_new_user(request, token_data)
 
-@router.post("/update_user_password")
-def update_user_password(email: str, token_data: dict = Depends(auth.get_current_user)):
-    return user.handle_new_password(email, token_data)
-
 @router.delete("/delete_user")
 def delete_user_by_email(data: UserBase, token_data: dict = Depends(auth.get_current_user)):
     return user.handle_delete_user(data.email, token_data)
