@@ -46,8 +46,8 @@ class MenuDatabase(Database):
         query = """
         SELECT name FROM ingredients
         WHERE _id IN (
-            SELECT item_id FROM item_ingredients
-            WHERE menu_id IN (
+            SELECT ingredient_id FROM item_ingredients
+            WHERE item_id IN (
                 SELECT _id FROM items WHERE name = %s
             )
         );"""
@@ -70,28 +70,46 @@ class MenuDatabase(Database):
             ing.name   AS ingredient_name,
             ing.type   AS ingredient_type
         FROM items
-                LEFT JOIN item_ingredients ii ON items._id = ii.menu_id
-                LEFT JOIN ingredients ing ON ii.item_id = ing._id
+                LEFT JOIN item_ingredients ii ON items._id = ii.item_id
+                LEFT JOIN ingredients ing ON ii.ingredient_id = ing._id
         WHERE ing.name IS NOT NULL
         AND ing.type IS NOT NULL;"""
         return self.query(query)
     
     def insert_item(self, name: str, ingredient_type: str):
-        query = "INSERT INTO items (_id, name, type) VALUES (%s, %s, %s)"
-        params = (str(uuid.uuid4()), name, ingredient_type,)
+        query = """INSERT INTO items (_id, name, type)
+            SELECT %s, %s, %s
+            WHERE NOT EXISTS (
+            SELECT 1
+            FROM items
+            WHERE name = %s
+            );"""
+        params = (str(uuid.uuid4()), name, ingredient_type, name,)
         self.insert(query, params)
 
     def insert_ingredient(self, name: str, ingredient_type: str):
-        query = "INSERT INTO ingredients (_id, name, type) VALUES (%s, %s, %s)"
-        params = (str(uuid.uuid4()), name, ingredient_type,)
+        query = """INSERT INTO ingredients (_id, name, type)
+            SELECT %s, %s, %s
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM ingredients
+                WHERE name = %s
+            );"""
+        params = (str(uuid.uuid4()), name, ingredient_type, name,)
         self.insert(query, params)
 
     def insert_item_ingredient(self, item_name: str, ingredient_name: str):
         query = """
-        INSERT INTO item_ingredients (menu_id, item_id)
-        VALUES (
-            (SELECT _id FROM items WHERE name = %s),
-            (SELECT _id FROM ingredients WHERE name = %s)
+        INSERT INTO item_ingredients (item_id, ingredient_id)
+        SELECT items._id, ingredients._id
+        FROM items, ingredients
+        WHERE items.name = %s
+        AND ingredients.name = %s
+        AND NOT EXISTS (
+            SELECT 1
+            FROM item_ingredients
+            WHERE item_id = items._id
+            AND ingredient_id = ingredients._id
         );"""
         params = (item_name, ingredient_name)
         self.insert(query, params)

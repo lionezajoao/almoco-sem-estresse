@@ -11,9 +11,9 @@ class Utils:
             if dish not in transformed_dataset:
                 transformed_dataset[dish] = {
                     "type": dish_type,
-                    "proteína": [],
+                    "proteina": [],
                     "hortifruti": [],
-                    "frio": [],
+                    "frios": [],
                     "mercearia": []
                     # Add other categories as needed based on your dataset
                 }

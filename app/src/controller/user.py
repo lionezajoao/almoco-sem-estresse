@@ -70,7 +70,9 @@ class UserController:
                 whatsapp="https://api.whatsapp.com/send/?phone=5531972394438&app_absent=0"
             )
             
-            self.email.send_text_email(subject="Senha provisória", recipients=[data.email], body=email_text, html=True)
+            email_response = self.email.send_text_email(subject="Senha provisória", recipients=[data.email], body=email_text, html=True)
+            if not email_response:
+                raise HTTPException(status_code=500, detail="Failed to send email")
             return JSONResponse(content={ "success": True, "message": "User added successfully"}, status_code=200)
         raise HTTPException(status_code=401, detail="Unauthorized")
     
@@ -121,5 +123,7 @@ class UserController:
             whatsapp="https://api.whatsapp.com/send/?phone=5531972394438&app_absent=0"
         )
             
-        self.email.send_text_email(subject="Senha provisória", recipients=[email], body=email_text, html=True)
+        email_response = self.email.send_text_email(subject="Senha provisória", recipients=[email], body=email_text, html=True)
+        if not email_response:
+            raise HTTPException(status_code=500, detail="Failed to send email")
         return JSONResponse(content={ "success": True, "message": "User added successfully"}, status_code=200)

@@ -65,36 +65,36 @@ class Menu(MenuDatabase):
                     "main_dish": {
                         "dish": day.main_dish,
                         "ingredients": {
-                            "protein": main_dish_data.get("proteína", []) if main_dish_data else [],
+                            "protein": main_dish_data.get("proteina", []) if main_dish_data else [],
                             "hortifrutti": main_dish_data.get("hortifruti", []) if main_dish_data else [],
-                            "cold_cuts": main_dish_data.get("frio", []) if main_dish_data else [],
+                            "cold_cuts": main_dish_data.get("frios", []) if main_dish_data else [],
                             "grocery": main_dish_data.get("mercearia", []) if main_dish_data else []
                         }
                     },
                     "salad": {
                         "dish": day.salad,
                         "ingredients": {
-                            "protein": salad_data.get("proteína", []) if salad_data else [],
+                            "protein": salad_data.get("proteina", []) if salad_data else [],
                             "hortifrutti": salad_data.get("hortifruti", []) if salad_data else [],
-                            "cold_cuts": salad_data.get("frio", []) if salad_data else [],
+                            "cold_cuts": salad_data.get("frios", []) if salad_data else [],
                             "grocery": salad_data.get("mercearia", []) if salad_data else []
                         }
                     },
                     "side_dish": {
                         "dish": day.side_dish,
                         "ingredients": {
-                            "protein": side_dish_data.get("proteína", []) if side_dish_data else [],
+                            "protein": side_dish_data.get("proteina", []) if side_dish_data else [],
                             "hortifrutti": side_dish_data.get("hortifruti", []) if side_dish_data else [],
-                            "cold_cuts": side_dish_data.get("frio", []) if side_dish_data else [],
+                            "cold_cuts": side_dish_data.get("frios", []) if side_dish_data else [],
                             "grocery": side_dish_data.get("mercearia", []) if side_dish_data else []
                         }
                     },
                     "accompaniment": {
                         "dish": day.accompaniment,
                         "ingredients": {
-                            "protein": accompaniment_data.get("proteína", []) if accompaniment_data else [],
+                            "protein": accompaniment_data.get("proteina", []) if accompaniment_data else [],
                             "hortifrutti": accompaniment_data.get("hortifruti", []) if accompaniment_data else [],
-                            "cold_cuts": accompaniment_data.get("frio", []) if accompaniment_data else [],
+                            "cold_cuts": accompaniment_data.get("frios", []) if accompaniment_data else [],
                             "grocery": accompaniment_data.get("mercearia", []) if accompaniment_data else []
                         }
                     }
@@ -112,14 +112,16 @@ class Menu(MenuDatabase):
         files_list = [file for file in temp_list if menu_name in file]
         files_list = [f'temp/{file}' for file in files_list]
 
-        self.email.send_media_email(subject="Menu", recipients=[token_data.get("email")], attachment_paths=files_list)
+        email_response = self.email.send_media_email(subject="Menu", recipients=[token_data.get("email")], attachment_paths=files_list)
 
         for file in files_list:
             if os.path.exists(file):
                 os.remove(file)
-        
 
-        return menu_data, ingredients_data
+        if not email_response:
+            raise Exception("Failed to send email")
+        
+        return { "success": True, "message": "Menu created successfully" }
         
 
     def create_table(self, menu_data, menu_name):
@@ -168,12 +170,12 @@ class Menu(MenuDatabase):
             week_grocery = list(week_ingredients["grocery"]) + [None] * (week_length - len(week_ingredients["grocery"]))
             
             week_ingredients_data = {
-                "Proteína": week_proteins,
+                "Proteina": week_proteins,
                 "Hortifruti": week_hortifruti,
                 "Frios": week_cold_cuts,
                 "Mercearia": week_grocery
             }
-            week_ingredients_df = pd.DataFrame(week_ingredients_data, columns=["Proteína", "Hortifruti", "Frios", "Mercearia"])
+            week_ingredients_df = pd.DataFrame(week_ingredients_data, columns=["Proteina", "Hortifruti", "Frios", "Mercearia"])
             week_ingredients_df.to_excel(writer, sheet_name=f"Ingredientes Semana {week_choice}", index=False)
 
         max_length = max(len(monthly_ingredients["protein"]), len(monthly_ingredients["hortifrutti"]), len(monthly_ingredients["cold_cuts"]), len(monthly_ingredients["grocery"]))
@@ -185,7 +187,7 @@ class Menu(MenuDatabase):
         grocery = list(monthly_ingredients["grocery"]) + [None] * (max_length - len(monthly_ingredients["grocery"]))
 
         monthly_ingredients_df = pd.DataFrame({
-            "Proteína": proteins,
+            "Proteina": proteins,
             "Hortifruti": hortifruti,
             "Frios": cold_cuts,
             "Mercearia": grocery
@@ -257,13 +259,13 @@ class Menu(MenuDatabase):
             run = header_paragraph.add_run()
             run.add_picture(header_image_path, width=Inches(2))
             run.font.size = Pt(12)
-
-            doc.add_heading('Resumo do Cardápio Semanal', level=1)
             
             df_week = dataframe[sheet_name]
             if sheet_name == "Ingredientes do Mês":
+                doc.add_heading('Resumo do Cardápio Mensal', level=1)
                 self.add_table_from_df(df_week, doc)
             elif sheet_name.startswith("Semana"):
+                doc.add_heading('Resumo do Cardápio Semanal', level=1)
                 self.create_paragraph(doc, sheet_name, df_week)
                 doc.add_page_break()
                 df_week = dataframe[f"Ingredientes Semana {sheet_name.split(' ')[-1]}"]

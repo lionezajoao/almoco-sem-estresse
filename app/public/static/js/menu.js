@@ -273,7 +273,7 @@ function updateWeekChecker(selectedMenus) {
 
 
 async function retrieveMainPlate(token) {
-    const data = await fetch(`/menu/get_item_by_type?type=Prato principal`, {
+    const data = await fetch(`/menu/get_item_by_type?type=Prato Principal`, {
         headers: { token }
     });
     const mainPlate = await data.json();
@@ -281,7 +281,7 @@ async function retrieveMainPlate(token) {
 }
 
 async function retrieveSalad(token) {
-    const data = await fetch(`/menu/get_item_by_type?type=Salada`, {
+    const data = await fetch(`/menu/get_item_by_type?type=Saladas`, {
         headers: { token }
     });
     const salad = await data.json();
@@ -297,7 +297,7 @@ async function retrieveGarrison(token) {
 }
 
 async function retrieveFollowUp(token) {
-    const data = await fetch(`/menu/get_item_by_type?type=Acompanhamento`, {
+    const data = await fetch(`/menu/get_item_by_type?type=Acompanhamentos`, {
         headers: { token }
     });
     const followUp = await data.json();

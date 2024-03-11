@@ -112,7 +112,13 @@ class Auth:
         # Send confirmation email
         email_subject = "Confirmação de email"
         email_body = f"Link de confirmação do email: {confirmation_token}"
-        self.email.send_text_email(email_subject, [email], email_body)
+        email_response = self.email.send_text_email(email_subject, [email], email_body)
+        if not email_response:
+            return {
+                "success": False,
+                "status_code": 500,
+                "detail": "failed-to-send-email"
+            }
         return {
             "success": True,
             "status_code": 200,
@@ -133,7 +139,13 @@ class Auth:
         # Send reset password email
         email_subject = "Redefinição de senha"
         email_body = f"Código de redefinição de senha: {reset_token}"
-        self.email.send_text_email(email_subject, [email], email_body)
+        email_response = self.email.send_text_email(email_subject, [email], email_body)
+        if not email_response:
+            return {
+                "success": False,
+                "status_code": 500,
+                "detail": "failed-to-send-email"
+            }
         return {
             "success": True,
             "status_code": 200,

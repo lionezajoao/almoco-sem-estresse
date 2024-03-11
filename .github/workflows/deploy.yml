@@ -31,6 +31,16 @@ jobs:
           echo "TOKEN_KEY=${{ secrets.TOKEN_KEY }}" >> .env
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
           echo "HOTMART_TOKEN=${{ secrets.HOTMART_TOKEN }}" >> .env
+          echo "SALT=${{ secrets.SALT }}" >> .env
+
+      - name: Transfer .env file to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USERNAME }}
+          password: ${{ secrets.VM_PASSWORD }}
+          source: .env
+          target: ~/nutri-website/.env
 
       - name: Build docker image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest -f prod.Dockerfile .
@@ -47,6 +57,5 @@ jobs:
           script: |
             cd ~/nutri-website
             git pull
-            cd
             docker pull ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest
             docker service update --image ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest nutri-website-prod_prod

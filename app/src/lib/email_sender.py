@@ -24,7 +24,7 @@ class EmailSender:
         msg['From'] = self.username
         msg['To'] = ', '.join(recipients)
 
-        self.send_email(msg)
+        return self.send_email(msg)
 
     def send_media_email(self, subject, recipients, attachment_paths, body=None):
         msg = MIMEMultipart(body)
@@ -38,7 +38,7 @@ class EmailSender:
                 part['Content-Disposition'] = f'attachment; filename="{ attachment_path.split("/")[-1] }"'
                 msg.attach(part)
 
-        self.send_email(msg)
+        return self.send_email(msg)
 
     def send_email(self, msg):
         try:
@@ -46,8 +46,10 @@ class EmailSender:
                 smtp_server.login(self.username, self.password)
                 smtp_server.send_message(msg)
             print("Email sent successfully!")
+            return True
         except Exception as e:
             print(f"Failed to send email: {str(e)}")
+            return False
 
         
 

@@ -14,6 +14,10 @@ class Database:
         )
         self.cur = self.conn.cursor()
 
+    def create_table(self, query):
+        self.cur.execute(query)
+        self.commit()
+
     def query(self, query, params=None):
         self.cur.execute(query, params)
         try:
