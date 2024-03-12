@@ -15,7 +15,7 @@ class Auth:
         self.user = User()
         self.utils = Utils()
         self.email = EmailSender()
-        self.salt = os.environ.get("SALT").encode()
+        self.salt = bcrypt.gensalt()
         self.token_key = os.environ.get("TOKEN_KEY")
         self.token_secret = os.environ.get("SECRET_KEY")
         self.hotmart_token = os.environ.get("HOTMART_TOKEN")
