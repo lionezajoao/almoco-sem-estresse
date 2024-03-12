@@ -14,7 +14,7 @@ class Database:
         )
         self.cur = self.conn.cursor()
 
-    def create_table(self, query):
+    def create(self, query):
         self.cur.execute(query)
         self.commit()
 
