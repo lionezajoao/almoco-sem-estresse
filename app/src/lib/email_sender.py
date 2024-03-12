@@ -42,7 +42,7 @@ class EmailSender:
 
     def send_email(self, msg):
         try:
-            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
+            with smtplib.SMTP_SSL(self.host, self.port) as smtp_server:
                 smtp_server.login(self.username, self.password)
                 smtp_server.send_message(msg)
             print("Email sent successfully!")
