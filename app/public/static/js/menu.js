@@ -99,6 +99,8 @@ document.addEventListener("DOMContentLoaded", async function() {
             // Append the box to the summary container
             document.getElementById("boxes-container").appendChild(contentBox);
             subscribeButton.style.display = "block";
+            document.getElementById("menu-button-label").style.display = "block";
+            document.getElementById("end-request").style.display = "none";
             const weekDaySelect = document.getElementById("week-day");
             const selectedOption = weekDaySelect.querySelector(`option[value="${weekDay}"]`);
             selectedOption.remove();
@@ -110,6 +112,8 @@ document.addEventListener("DOMContentLoaded", async function() {
                 boxCount--; // Decrease the box count when a box is removed
                 if (boxCount === 0) {
                     subscribeButton.style.display = "none";
+                    document.getElementById("menu-button-label").style.display = "none";
+                    document.getElementById("end-request").style.display = "block";
                 }
 
                 // Return the week day to the dropdown menu
@@ -163,6 +167,8 @@ document.addEventListener("DOMContentLoaded", async function() {
         document.getElementById("boxes-container").innerHTML = "";
         boxCount = 0;
         subscribeButton.style.display = "none";
+        document.getElementById("menu-button-label").style.display = "none";
+        document.getElementById("end-request").style.display = "block";
 
         selectedMenus.push(...weekMenu);
         weekMenu = [];
@@ -189,17 +195,19 @@ document.addEventListener("DOMContentLoaded", async function() {
                 });
 
                 if (response.ok) {
-                    showCustomNotification("Sucesso!", "Cardápio enviado para o e-mail cadastrado!", true);
+                    showCustomNotification("Sucesso!", "Cardápio enviado para o e-mail cadastrado! Verifique a caixa de spam caso não apareça diretamente na sua caixa de entrada", true, 5000);
                     
                     document.getElementById("boxes-container").innerHTML = "";
                     boxCount = 0;
                     subscribeButton.style.display = "none";
+                    document.getElementById("menu-button-label").style.display = "none";
+                    document.getElementById("end-request").style.display = "block";
 
                     selectedMenus = [];
 
                     setTimeout(() => {
                         window.location.reload();
-                    }, 1000);
+                    }, 5000);
                 } else {
                     showCustomNotification("Erro ao adicionar menu.", "Entre em contato com os administradores do sistema.", false);
                 }
@@ -331,7 +339,7 @@ function addFormFields(formElement, mainPlate, salad, garrison, followUp) {
     });
 }
 
-function showCustomNotification(title, message, isSuccess) {
+function showCustomNotification(title, message, isSuccess, timeout=2000) {
     const container = document.getElementById('notification-container');
 
     // Creating the notification
@@ -374,5 +382,5 @@ function showCustomNotification(title, message, isSuccess) {
         if (container.contains(notification)) {
             container.removeChild(notification);
         }
-    }, 2000);
+    }, timeout);
 }

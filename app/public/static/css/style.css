@@ -252,12 +252,8 @@ body, html {
     align-items: center;
     justify-content: flex-start;
     /* width: 400px; */
-    padding: 20px;
+    padding-top: 20px;
     box-sizing: border-box;
-}
-
-.finalizar-button-container {
-    margin-bottom: 1rem; /* Adjust as necessary for spacing */
 }
 
 .boxes-container {
@@ -275,6 +271,10 @@ body, html {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     background-color: #f9f9f9;
     width: 200px auto;
+}
+
+.button-container {
+    padding-bottom: 10px;
 }
 
 .button-container button {

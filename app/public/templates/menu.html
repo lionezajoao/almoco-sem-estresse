@@ -40,7 +40,6 @@
                             <option value="3">Semana 3</option>
                             <option value="4">Semana 4</option>
                         </select>
-                        <button type="button" id="finish-button">Finalizar</button>
                     </div>
                 </form>
             </div>
@@ -75,18 +74,29 @@
                             <option value="" disabled selected>Acompanhamento</option>
                             <!-- Options here -->
                         </select>
-                        <button type="button" id="add-week-button">Adicionar à Semana</button>
+                        <button title="Clique aqui para adicionar as escolhas do dia na semana" type="button" id="add-week-button">Adicionar à Semana</button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <div id="summary-container" class="summary-container">
-            <div class="button-container">
-                <button type="button" id="add-menu-button">Adicionar ao Menu</button>
-            </div>
+        <div id="summary-container" class="summary-container" >
             <div id="boxes-container" class="boxes-container">
                 <!-- Stylized boxes will be added here -->
+            </div>
+            <div class="button-container">
+                <label class="card-title" id="menu-button-label" style="font-size: smaller; display: none;">Clique aqui para finalizar o cardápio a semana</label>
+                <button title="Clique aqui para adicionar a semana ao cardápio" type="button" id="add-menu-button">Finalizar Semana</button>
+            </div>
+        </div>
+        <div id="end-request" class="card-container">
+            <div class="card">
+                <form class="card-form">
+                    <label class="card-title" style="font-size: smaller;">Assim que finalizar as semanas, clique aqui para receber o cardápio completo por e-mail</label>
+                    <div class="form-group">
+                        <button title="Clique aqui para receber o cardápio por email" type="button" id="finish-button">Finalizar Cardápio</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

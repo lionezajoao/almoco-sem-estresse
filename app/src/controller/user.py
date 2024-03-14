@@ -52,7 +52,7 @@ class UserController:
                     A partir de agora você pode planejar cardápios de forma rápida e simples.<br><br>
                     Vou te passar algumas informações importantes sobre seu acesso ok?<br><br><br>
                     Para acessar a ferramenta geradora de cardápios, basta clicar nesse link: <a href="{website}">Almoço Sem Estresse</a><br><br>
-                    Uma senha será solicitada. Esta é sua senha provisória:<br><br>
+                    É necessário fazer o login com o e-mail cadastrado no ato da compra e também com uma senha que será solicitada. Esta é sua senha provisória:<br><br>
                     Senha: {password}<br><br>
                     Recomendamos que você faça a alteração no primeiro acesso.<br><br>
                     Pronto, agora é só escolher os pratos e montar seus cardápios.<br><br>
@@ -105,6 +105,7 @@ class UserController:
                 A partir de agora você pode planejar cardápios de forma rápida e simples.<br><br>
                 Vou te passar algumas informações importantes sobre seu acesso ok?<br><br><br>
                 Para acessar a ferramenta geradora de cardápios, basta clicar nesse link: <a href="{website}">Almoço Sem Estresse</a><br><br>
+                É necessário fazer o login com o e-mail cadastrado no ato da compra e também com uma senha que será solicitada. Esta é sua senha provisória:<br><br>
                 Uma senha será solicitada. Esta é sua senha provisória:<br><br>
                 Senha: {password}<br><br>
                 Recomendamos que você faça a alteração no primeiro acesso.<br><br>
