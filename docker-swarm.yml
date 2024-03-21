@@ -14,6 +14,11 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
 
   prod:
     image: lionezajoao/nutri-website-prod:latest
@@ -23,7 +28,12 @@ services:
       - .env
     deploy:
       mode: replicated
-      replicas: 1
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 180s
     networks:
       - default
     labels:
