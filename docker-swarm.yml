@@ -19,15 +19,6 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.traefik-dashboard.rule=Host(`dashboard.xn--almoosemestresse-fpb.app.br`)"
-        - "traefik.http.routers.traefik-dashboard.entrypoints=websecure"
-        - "traefik.http.routers.traefik-dashboard.service=api@internal"
-        - "traefik.http.routers.traefik-dashboard.middlewares=auth"
-        - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_AUTH}"
-    env_file:
-      - .env
       
   prod:
     image: lionezajoao/nutri-website-prod:latest
