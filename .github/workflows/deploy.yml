@@ -54,6 +54,7 @@ jobs:
           username: ${{ secrets.VM_USERNAME }}
           password: ${{ secrets.VM_PASSWORD }}
           script: |
+            ./init_swarm.sh
             cd ~/nutri-website
             git pull
             docker pull ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest
