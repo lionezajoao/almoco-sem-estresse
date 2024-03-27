@@ -41,8 +41,6 @@ services:
         - "traefik.http.services.prod.loadbalancer.server.port=8000"
         - "traefik.http.services.prod.loadbalancer.server.scheme=http"
         - "traefik.http.services.prod.loadbalancer.server.weight=1"
-    networks:
-      - traefik_public
 
 networks:
   default:
