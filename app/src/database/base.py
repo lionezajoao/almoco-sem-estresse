@@ -3,7 +3,7 @@ import psycopg2
 
 class Database:
     def __init__(self):
-        print("TESTE")
+        print(f"Database initialized { self.__class__}")
 
     def connect(self):
         try:
