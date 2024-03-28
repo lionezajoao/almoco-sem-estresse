@@ -16,29 +16,49 @@ class Menu(MenuDatabase):
         self.email = EmailSender()
 
     def get_all_items(self):
+        self.connect()
         data = self.get_menu()
+        self.close()
         return data
     
     def get_item_by_type(self, type):
+        self.connect()
         data = self.get_data_by_type(type)
+        self.close()
         return [item[0] for item in data]
     
     def get_all_ingredients(self):
-        return self.get_ingredients()
+        self.connect()
+        data = self.get_ingredients()
+        self.close()
+        return data
     
     def get_data_by_name(self, name):
-        return self.get_item_by_name(name)
+        self.connect()
+        data = self.get_item_by_name(name)
+        self.close()
+        return data
     
     def get_ingredients_from_items(self, name):
-        return self.get_items_ingredients(name)
+        self.connect()
+        data = self.get_items_ingredients(name)
+        self.close()
+        return data
     
     def get_all_items_ingredients(self):
-        return self.get_relational_menu()
+        self.connect()
+        data = self.get_relational_menu()
+        self.close()
+        return data
     
     def get_ingredient_type(self, ingredient):
-        return self.get_ingredient_type_by_name(ingredient)
+        self.connect()
+        data = self.get_ingredient_type_by_name(ingredient)
+        self.close()
+        return data
     
     def insert_new_item(self, data):
+        self.connect()
         if not self.check_if_item_exists(data.name):
             self.insert_item(data.name)
 
@@ -47,8 +67,12 @@ class Menu(MenuDatabase):
                 self.insert_ingredient(ingredient)
             self.insert_item_ingredient(data.name, ingredient)
 
+        self.close()
+
     def create_menu(self, data: NewMenuModel, token_data: dict):
+        self.connect()
         relational_data = self.utils.transform_dataset(self.get_all_items_ingredients())
+        self.close()
         menu_data = {}
         ingredients_data = {}
         menu_name = f"Cardápio - { token_data.get('name') }"

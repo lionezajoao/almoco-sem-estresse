@@ -1,7 +1,6 @@
 from fastapi import Header, HTTPException
 from fastapi.responses import JSONResponse
 
-from app.src.utils import Utils
 from app.src.lib.auth import Auth
 from app.models.user_models import UserLogin
 
@@ -10,9 +9,11 @@ class AuthController(Auth):
         super().__init__()
     
     async def authenticate_user(self, user_data: UserLogin):
-        if user_data:
-            email = user_data.email
-            password = user_data.password
+        if not user_data:
+            return JSONResponse(status_code=400, content={"detail": "Invalid data"})
+        
+        email = user_data.email
+        password = user_data.password
         return await self.get_user_auth(email, password)
     
     async def get_current_user(self, token: str = Header(...)):

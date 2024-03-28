@@ -4,7 +4,6 @@ import psycopg2
 class Database:
     def __init__(self):
         print("TESTE")
-        self.connect()
 
     def connect(self):
         try:
@@ -24,47 +23,32 @@ class Database:
         self.conn.close()
 
     def create(self, query):
-        self.connect()
         self.cur.execute(query)
         self.commit()
-        self.close()
 
     def query(self, query, params=None):
-        self.connect()
         self.cur.execute(query, params)
         try:
-            data = self.cur.fetchall()
-            self.close()
-            return data
+            return self.cur.fetchall()
         except Exception as e:
             print(e)
-            self.close()
+
             return None
     
     def insert(self, query, params=None):
-        self.connect()
         self.cur.execute(query, params)
         self.commit()
-        self.close()
 
     def update(self, query, params=None):
-        self.connect()
         self.cur.execute(query, params)
         self.commit()
-        self.close()
 
     def delete(self, query, params=None):
-        self.connect()
         self.cur.execute(query, params)
         self.commit()
-        self.close()
 
     def rollback(self):
-        self.connect()
         self.conn.rollback()
-        self.close()
 
-    def commit(self):
-        self.connect()  
+    def commit(self):  
         self.conn.commit()
-        self.close()

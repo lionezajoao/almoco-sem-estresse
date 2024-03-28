@@ -5,25 +5,45 @@ class User(UserDatabase):
         super().__init__()
 
     def get_all_users(self):
-        return self.get_users()
+        self.connect()
+        result = self.get_users()
+        self.close()
+        return result
     
     def get_user_by_email(self, email):
-        return self.get_user(email)
+        self.connect()
+        result = self.get_user(email)
+        self.close()
+        return result
     
     def insert_new_user(self, name, email, password, role):
-        return self.insert_user(name, email, password, role)
+        self.connect()
+        result = self.insert_user(name, email, password, role)
+        self.close()
+        return result
     
     def get_encrypted_pass(self, email):
-        return self.get_user_password(email)[0][0]
+        self.connect()
+        result = self.get_user_password(email)[0][0]
+        self.close()
+        return result
     
     def update_password(self, email, password):
-        return self.update_user_password(email, password)
+        self.connect()
+        result = self.update_user_password(email, password)
+        self.close()
+        return result
 
     def delete_user(self, email):
-        return self.delete_user_by_email(email)
+        self.connect()
+        result = self.delete_user_by_email(email)
+        self.close()
+        return result
     
     def verify_user_role(self, email: str, role: str, allowed_roles: list) -> bool:
+        self.connect()
         user_data = self.get_user(email)
+        self.close()
         if not user_data:
             return False
         

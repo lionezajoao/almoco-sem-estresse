@@ -22,7 +22,7 @@ router = APIRouter(
 menu = MenuController()
 auth = AuthController()
 
-@router.get("/list_all_items")
+@router.get("/get_all_items")
 def get_menu(user: UserLogin = Depends(auth.get_current_user)):
     return menu.handle_all_items()
 
@@ -30,7 +30,7 @@ def get_menu(user: UserLogin = Depends(auth.get_current_user)):
 def get_item_by_type(type: str, user: UserLogin = Depends(auth.get_current_user)):
     return menu.handle_data_by_type(type)
 
-@router.get("/list_all_ingredients")
+@router.get("/get_all_ingredients")
 def get_ingredients(user: UserLogin = Depends(auth.get_current_user)):
     return menu.handle_all_ingredients()
 

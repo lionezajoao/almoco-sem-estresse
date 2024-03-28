@@ -31,9 +31,11 @@ class Auth:
         return token == self.hotmart_token
     
     async def get_user_auth(self, email: str, password: str):
+        self.user.connect()
         user_data = self.user.get_user_by_email(email)
         
         if not user_data:
+            self.user.close()
             return {
                 "success": False,
                 "status_code": 404,
@@ -44,6 +46,7 @@ class Auth:
         
         hashed_pwd = self.user.get_encrypted_pass(email)
         if not self.verify_password(password, hashed_pwd):
+            self.user.close()
             return {
                 "success": False,
                 "status_code": 401,
@@ -58,6 +61,7 @@ class Auth:
             "exp": int((datetime.utcnow() + timedelta(hours=12)).timestamp())  # Convert datetime to integer
         }
         token = jwt.encode(payload, self.token_secret, algorithm="HS256")
+        self.user.close()
         
         return {
             "success": True,
@@ -99,8 +103,11 @@ class Auth:
         
     async def send_email_confirmation(self, email: str):
 
+        self.user.connect()
         user = self.user.get_user_by_email(email)
+
         if not user:
+            self.user.close()
             return {
                 "success": False,
                 "status_code": 404,
@@ -113,12 +120,16 @@ class Auth:
         email_subject = "Confirmação de email"
         email_body = f"Link de confirmação do email: {confirmation_token}"
         email_response = self.email.send_text_email(email_subject, [email], email_body)
+
         if not email_response:
+            self.user.close()
             return {
                 "success": False,
                 "status_code": 500,
                 "detail": "failed-to-send-email"
             }
+        
+        self.user.close()
         return {
             "success": True,
             "status_code": 200,
@@ -126,8 +137,11 @@ class Auth:
         }
     
     async def send_reset_password_email(self, email: str):
+        self.user.connect()
         user = self.user.get_user_by_email(email)
+
         if not user:
+            self.user.close()
             return {
                 "success": False,
                 "status_code": 404,
@@ -141,11 +155,14 @@ class Auth:
         email_body = f"Código de redefinição de senha: {reset_token}"
         email_response = self.email.send_text_email(email_subject, [email], email_body)
         if not email_response:
+            self.user.close()
             return {
                 "success": False,
                 "status_code": 500,
                 "detail": "failed-to-send-email"
             }
+        
+        self.user.close()
         return {
             "success": True,
             "status_code": 200,
@@ -179,8 +196,10 @@ class Auth:
             }
     
     async def change_password(self, email: str, password: str):
+        self.user.connect()
         hashed_pwd = self.hash_password(password)
         self.user.update_user_password(email, hashed_pwd)
+        self.user.close()
         return {
             "success": True,
             "status_code": 200,

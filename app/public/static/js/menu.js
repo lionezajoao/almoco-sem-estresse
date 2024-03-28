@@ -32,10 +32,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         window.location.href = "/admin";
     });
 
-    const mainPlate = await retrieveMainPlate(jwt);
-    const salad = await retrieveSalad(jwt);
-    const garrison = await retrieveGarrison(jwt);
-    const followUp = await retrieveFollowUp(jwt);
+    const { mainPlate, salad, garrison, followUp } = handleItemsData(await getItems(jwt));
     const subscribeButton = document.getElementById("add-menu-button");
 
     addFormFields(document.getElementById("card-container").querySelector('.card'), mainPlate, salad, garrison, followUp);
@@ -279,6 +276,34 @@ function updateWeekChecker(selectedMenus) {
     }
 }
 
+async function getItems(token) {
+    const data = await fetch("/menu/get_all_items", {
+        headers: { token }
+    });
+    const items = await data.json();
+    return items;
+}
+
+function handleItemsData(items) {
+    const mainPlate = [];
+    const salad = [];
+    const garrison = [];
+    const followUp = [];
+
+    items.forEach(item => {
+        if (item[1] === "Prato Principal") {
+            mainPlate.push(item[0]);
+        } else if (item[1] === "Saladas") {
+            salad.push(item[0]);
+        } else if (item[1] === "Guarnição") {
+            garrison.push(item[0]);
+        } else if (item[1] === "Acompanhamentos") {
+            followUp.push(item[0]);
+        }
+    });
+
+    return { mainPlate, salad, garrison, followUp };
+}
 
 async function retrieveMainPlate(token) {
     const data = await fetch(`/menu/get_item_by_type?type=Prato Principal`, {

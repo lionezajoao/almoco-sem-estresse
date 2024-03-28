@@ -42,6 +42,7 @@ function loadUserForm() {
 }
 
 async function loadUserList() {
+    showCustomNotification("Carregando usuários, aguarde...", null, true);
     document.getElementById("new-user-form").style.display = "none";
     document.getElementById("new-dish-form").style.display = "none";
     

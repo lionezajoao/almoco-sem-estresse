@@ -21,6 +21,7 @@ let codeCheck = '';
 function handleLogin(event) {
     event.preventDefault();
     const form = document.getElementById('loginForm');
+    showCustomNotification('Login', 'Autenticando...', true);
     fetch(form.action, {
         method: 'POST',
         headers: {
