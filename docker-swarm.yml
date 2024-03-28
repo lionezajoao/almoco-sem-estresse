@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   traefik:
-    image: "traefik:v2.10"
+    image: "traefik:v2.11"
     ports:
       - "80:80"    
       - "443:443"
@@ -19,7 +19,7 @@ services:
         max_attempts: 3
         window: 120s
       
-  prod:
+  service:
     image: lionezajoao/nutri-website-prod:latest
     volumes:
       - .:/usr/src/app
