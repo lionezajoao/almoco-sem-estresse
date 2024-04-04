@@ -13,7 +13,7 @@ services:
         protocol: tcp
         mode: host
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
       - "./letsencrypt:/letsencrypt"
       - "./traefik.toml:/etc/traefik/traefik.toml"
     deploy:

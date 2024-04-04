@@ -20,7 +20,7 @@
         entryPoint = "web"
 
 [api]
-    dashboard = true
+    dashboard = false
 
 [log]
-    level = "DEBUG"
+    level = "ERROR"
