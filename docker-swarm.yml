@@ -46,7 +46,7 @@ services:
         - "traefik.http.routers.prod.tls.certresolver=myresolver"
         - "traefik.http.services.prod.loadbalancer.server.port=8000"
     ports:
-      - "8000:8000"
+      - "80:8000"
     networks:
       - default
 
