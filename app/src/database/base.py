@@ -3,7 +3,7 @@ import psycopg2
 
 class Database:
     def __init__(self):
-        print(f"Database initialized { self.__class__}")
+        pass
 
     def connect(self):
         try:
@@ -15,12 +15,14 @@ class Database:
                 port=os.environ.get("PG_PORT")
             )
             self.cur = self.conn.cursor()
+            print("Connected to database.")
         except Exception as e:
             print(e)
 
     def close(self):
         self.cur.close()
         self.conn.close()
+        print("Connection closed.")
 
     def create(self, query):
         self.cur.execute(query)
