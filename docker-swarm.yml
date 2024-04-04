@@ -48,7 +48,7 @@ services:
     ports:
       - "8000:8000"
     networks:
-      - traefik_public
+      - default
 
 networks:
   default:
