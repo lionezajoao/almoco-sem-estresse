@@ -58,4 +58,4 @@ jobs:
             git pull
             docker pull ${{ secrets.DOCKER_USERNAME }}/nutri-website:latest
             docker service update --image ${{ secrets.DOCKER_USERNAME }}/nutri-website:latest nutri-website_service
-            docker container prune --all --force
+            docker system prune --all --force
