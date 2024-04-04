@@ -42,10 +42,10 @@ jobs:
           target: ~/nutri-website
 
       - name: Build docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest -f prod.Dockerfile .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/nutri-website:latest -f prod.Dockerfile .
 
       - name: Push docker image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/nutri-website:latest
 
       - name: Update Docker Swarm Service and Pull Changes
         uses: appleboy/ssh-action@master
@@ -57,6 +57,6 @@ jobs:
             ./init_swarm.sh
             cd ~/nutri-website
             git pull
-            docker pull ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest
-            docker service update --image ${{ secrets.DOCKER_USERNAME }}/nutri-website-prod:latest nutri-website-prod_prod
-            docker container prune
+            docker pull ${{ secrets.DOCKER_USERNAME }}/nutri-website:latest
+            docker service update --image ${{ secrets.DOCKER_USERNAME }}/nutri-website:latest nutri-website-service
+            docker container prune --all --force
