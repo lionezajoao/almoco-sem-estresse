@@ -52,7 +52,3 @@ networks:
   default:
     external:
       name: traefik_public
-
-volumes:
-  letsencrypt:
-    name: letsencrypt
