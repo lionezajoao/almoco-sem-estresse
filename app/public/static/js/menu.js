@@ -1,3 +1,5 @@
+
+
 document.addEventListener("DOMContentLoaded", async function() {
 
     document.getElementById("logout-button").addEventListener("click", function() {
@@ -32,10 +34,10 @@ document.addEventListener("DOMContentLoaded", async function() {
         window.location.href = "/admin";
     });
 
-    const { mainPlate, salad, garrison, followUp } = handleItemsData(await getItems(jwt));
+    const { mainPlate, salad, accompaniment } = handleItemsData(await getItems(jwt));
     const subscribeButton = document.getElementById("add-menu-button");
 
-    addFormFields(document.getElementById("card-container").querySelector('.card'), mainPlate, salad, garrison, followUp);
+    addFormFields(document.getElementById("card-container").querySelector('.card'), mainPlate, salad, accompaniment);
 
     let boxCount = 0; // Counter for the number of summary boxes
     let selectedMenus = []; // Array to store the selected menus
@@ -61,15 +63,17 @@ document.addEventListener("DOMContentLoaded", async function() {
             const weekday = handleWeekDay(weekDay);
             const mainDish = document.getElementById("main-dish").value;
             const salad = document.getElementById("salad").value;
-            const sideDish = document.getElementById("side-dish").value;
-            const accompaniment = document.getElementById("accompaniment").value;
+            const accompanimentList = document.querySelectorAll("#accompaniment");
+            const accompaniment = Array.from(accompanimentList)
+                .filter(select => select.value !== "")
+                .map(select => select.value)
+                .filter((value, index, self) => self.indexOf(value) === index);
 
             // Create a new menu object
             const menu = {
                 weekday: weekDay,
                 main_dish: mainDish,
                 salad: salad,
-                side_dish: sideDish,
                 accompaniment: accompaniment
             };
 
@@ -84,8 +88,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                     <p>Dia da semana: ${weekday}</p>
                     <p>Prato Principal: ${mainDish}</p>
                     <p>Salada: ${salad}</p>
-                    <p>Guarnição: ${sideDish}</p>
-                    <p>Acompanhamento: ${accompaniment}</p>
+                    <p>Acompanhamentos: ${accompaniment}</p>
                     <button class="delete-button">Remover</button>
                 </div>
             `;
@@ -125,8 +128,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             // Clear the form fields
             document.getElementById("main-dish").value = "";
             document.getElementById("salad").value = "";
-            document.getElementById("side-dish").value = "";
-            document.getElementById("accompaniment").value = "";
+            Array.from(document.querySelector("#accompaniment")).forEach(select => select.value = "");
 
             // Find the week menu object for the selected week choice
             let weekMenuObj = weekMenu.find(obj => obj.week_choice === weekChoice);
@@ -178,10 +180,9 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     // Add button and code to submit the menu to the backend
     document.getElementById("finish-button").addEventListener("click", async function() {
-        showCustomNotification("Criando menu, aguarde...", null, true);
         if (selectedMenus.length > 0) {
             try {
-                // showCustomNotification("Criando menu, aguarde...", null, true);
+                showCustomNotification("Criando menu, aguarde...", null, true);
                 const response = await fetch("/menu/create_menu", {
                     method: "POST",
                     headers: {
@@ -287,79 +288,51 @@ async function getItems(token) {
 function handleItemsData(items) {
     const mainPlate = [];
     const salad = [];
-    const garrison = [];
-    const followUp = [];
+    const accompaniment = [];
 
     items.forEach(item => {
         if (item[1] === "Prato Principal") {
             mainPlate.push(item[0]);
         } else if (item[1] === "Saladas") {
             salad.push(item[0]);
-        } else if (item[1] === "Guarnição") {
-            garrison.push(item[0]);
         } else if (item[1] === "Acompanhamentos") {
-            followUp.push(item[0]);
+            accompaniment.push(item[0]);
         }
     });
 
-    return { mainPlate, salad, garrison, followUp };
+    return { mainPlate, salad, accompaniment };
 }
 
-async function retrieveMainPlate(token) {
-    const data = await fetch(`/menu/get_item_by_type?type=Prato Principal`, {
-        headers: { token }
-    });
-    const mainPlate = await data.json();
-    return mainPlate;
-}
-
-async function retrieveSalad(token) {
-    const data = await fetch(`/menu/get_item_by_type?type=Saladas`, {
-        headers: { token }
-    });
-    const salad = await data.json();
-    return salad;
-}
-
-async function retrieveGarrison(token) {
-    const data = await fetch(`/menu/get_item_by_type?type=Guarnição`, {
-        headers: { token }
-    });
-    const garrison = await data.json();
-    return garrison;
-}
-
-async function retrieveFollowUp(token) {
-    const data = await fetch(`/menu/get_item_by_type?type=Acompanhamentos`, {
-        headers: { token }
-    });
-    const followUp = await data.json();
-    return followUp;
-}
-
-function addFormFields(formElement, mainPlate, salad, garrison, followUp) {
+function addFormFields(formElement, mainPlate, salad, accompaniment) {
     const fieldData = [
         { id: 'main-dish', data: mainPlate },
         { id: 'salad', data: salad },
-        { id: 'side-dish', data: garrison },
-        { id: 'accompaniment', data: followUp }
+        { id: 'accompaniment', data: accompaniment }
     ];
 
     fieldData.forEach(field => {
-        const select = formElement.querySelector(`#${field.id}`);
-        if (select) {
-            if (Array.isArray(field.data)) {
+        if (Array.isArray(field.data)) {
+            if (field.id == "accompaniment") { 
+                const select = formElement.querySelectorAll(`#${field.id}`);
+                select.forEach(select => {
+                    field.data.forEach(option => {
+                        const optionElement = document.createElement("option");
+                        optionElement.value = option;
+                        optionElement.text = option;
+                        select.appendChild(optionElement);
+                    });
+                });
+            } else {
+                const select = formElement.querySelector(`#${field.id}`);
                 field.data.forEach(option => {
                     const optionElement = document.createElement("option");
                     optionElement.value = option;
                     optionElement.text = option;
                     select.appendChild(optionElement);
                 });
-            } else {
-                console.error("Field data is not an array:", field.data);
             }
         } else {
-            console.error(`Select element with id '${field.id}' not found.`);
+            console.error("Field data is not an array:", field.data);
         }
     });
 }

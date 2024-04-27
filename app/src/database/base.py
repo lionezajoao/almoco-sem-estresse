@@ -1,9 +1,11 @@
 import os
 import psycopg2
 
-class Database:
+from app.src.utils import Utils
+
+class Database(Utils):
     def __init__(self):
-        pass
+        super().__init__()
 
     def connect(self):
         try:
@@ -15,39 +17,50 @@ class Database:
                 port=os.environ.get("PG_PORT")
             )
             self.cur = self.conn.cursor()
-            print("Connected to database.")
+            self.logger.info("Connected to database.")
         except Exception as e:
-            print(e)
+            self.logger.error(f"Error connecting to database, reason: {e}")
 
     def close(self):
         self.cur.close()
         self.conn.close()
-        print("Connection closed.")
+        self.logger.info("Connection closed.")
 
     def create(self, query):
         self.cur.execute(query)
         self.commit()
 
     def query(self, query, params=None):
+        self.logger.info(f"Executing query: {query}")
         self.cur.execute(query, params)
         try:
             return self.cur.fetchall()
         except Exception as e:
-            print(e)
-
-            return None
+            self.logger.error(f"Error fetching data, reason: {e}")
     
     def insert(self, query, params=None):
-        self.cur.execute(query, params)
-        self.commit()
+        try:
+            self.cur.execute(query, params)
+            self.commit()
+            self.logger.debug("Data inserted successfully.")
+        except Exception as e:
+            self.logger.error(f"Error inserting data, reason: {e}")
 
     def update(self, query, params=None):
-        self.cur.execute(query, params)
-        self.commit()
+        try:
+            self.cur.execute(query, params)
+            self.commit()
+            self.logger.debug("Data updated successfully.")
+        except Exception as e:
+            self.logger.error(f"Error updating data, reason: {e}")
 
     def delete(self, query, params=None):
-        self.cur.execute(query, params)
-        self.commit()
+        try:
+            self.cur.execute(query, params)
+            self.commit()
+            self.logger.debug("Data deleted successfully.")
+        except Exception as e:
+            self.logger.error(f"Error deleting data, reason: {e}")
 
     def rollback(self):
         self.conn.rollback()
