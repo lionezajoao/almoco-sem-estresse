@@ -24,7 +24,7 @@ openpyxl = "*"
 tqdm = "*"
 
 [scripts]
-prod = "python -m uvicorn app.main:app --host=0.0.0.0 --port=8000 --env-file=.env"
+prod = "python -m uvicorn app.main:app --host=0.0.0.0 --port=8000 --env-file=.env.prod"
 dev = "python -m uvicorn app.main:app --host=localhost --port=8000 --reload --env-file=.env.dev"
 build = "python -m scripts.populate_db"
 
