@@ -18,8 +18,7 @@ class DataModel(BaseModel):
     weekday: str
     main_dish: Optional[str]
     salad: Optional[str]
-    side_dish: Optional[str]
-    accompaniment: Optional[str]
+    accompaniment: Optional[List[str]]
 class MenuModel(BaseModel):
     week_choice: str
     data: List[DataModel]

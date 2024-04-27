@@ -1,11 +1,34 @@
 import random
 import string
+import logging
+from logging.config import fileConfig
 
 class Utils:
     def __init__(self) -> None:
-        pass
+        fileConfig('logging_config.ini')
+        self.logger = logging.getLogger()
+
+    @staticmethod
+    def log(func):
+        def wrapper(*args, **kwargs):
+            try:
+                # Log the start of the function
+                Utils().logger.debug(f"Calling function {func.__name__}")
+                
+                # Call the original function
+                result = func(*args, **kwargs)
+                
+                # Log the end of the function
+                Utils().logger.debug(f"Function {func.__name__} completed")
+                
+                return result
+            except Exception as e:
+                # Log the error
+                Utils().logger.error(f"Error in function {func.__name__}: {str(e)}")
+                raise
+        return wrapper
     
-    def transform_dataset(self,dataset):
+    def transform_dataset(self, dataset):
         transformed_dataset = {}
         for dish, dish_type, ingredient, ingredient_category in dataset:
             if dish not in transformed_dataset:

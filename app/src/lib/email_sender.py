@@ -5,10 +5,13 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 
+from app.src.utils import Utils
 
 
-class EmailSender:
+
+class EmailSender(Utils):
     def __init__(self, use_tls=True):
+        super().__init__()
         self.host = os.getenv('SMTP_HOST')
         self.port = os.getenv('SMTP_PORT')
         self.username = os.getenv('SMTP_USERNAME')
@@ -39,16 +42,16 @@ class EmailSender:
                 msg.attach(part)
 
         return self.send_email(msg)
-
+    
     def send_email(self, msg):
         try:
             with smtplib.SMTP_SSL(self.host, self.port) as smtp_server:
                 smtp_server.login(self.username, self.password)
                 smtp_server.send_message(msg)
-            print("Email sent successfully!")
+            self.logger.info("Email sent successfully!")
             return True
         except Exception as e:
-            print(f"Failed to send email: {str(e)}")
+            self.logger.error(f"Failed to send email: {str(e)}")
             return False
 
         

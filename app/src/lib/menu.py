@@ -4,7 +4,6 @@ from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
-from app.src.utils import Utils
 from app.src.lib.email_sender import EmailSender
 from app.src.database.menu import MenuDatabase
 from app.models.menu_models import NewMenuModel
@@ -12,51 +11,55 @@ from app.models.menu_models import NewMenuModel
 class Menu(MenuDatabase):
     def __init__(self):
         super().__init__()
-        self.utils = Utils()
         self.email = EmailSender()
 
+    @MenuDatabase.log
     def get_all_items(self):
         self.connect()
         data = self.get_menu()
         self.close()
         return data
     
+    @MenuDatabase.log
     def get_item_by_type(self, type):
         self.connect()
         data = self.get_data_by_type(type)
         self.close()
         return [item[0] for item in data]
     
+    @MenuDatabase.log
     def get_all_ingredients(self):
         self.connect()
         data = self.get_ingredients()
         self.close()
         return data
     
+    @MenuDatabase.log
     def get_data_by_name(self, name):
         self.connect()
         data = self.get_item_by_name(name)
         self.close()
         return data
     
+    @MenuDatabase.log
     def get_ingredients_from_items(self, name):
         self.connect()
         data = self.get_items_ingredients(name)
         self.close()
         return data
     
+    @MenuDatabase.log
     def get_all_items_ingredients(self):
-        self.connect()
-        data = self.get_relational_menu()
-        self.close()
-        return data
+        return self.get_relational_menu()
     
+    @MenuDatabase.log
     def get_ingredient_type(self, ingredient):
         self.connect()
         data = self.get_ingredient_type_by_name(ingredient)
         self.close()
         return data
     
+    @MenuDatabase.log
     def insert_new_item(self, data):
         self.connect()
         if not self.check_if_item_exists(data.name):
@@ -68,10 +71,11 @@ class Menu(MenuDatabase):
             self.insert_item_ingredient(data.name, ingredient)
 
         self.close()
-
+    
+    @MenuDatabase.log
     def create_menu(self, data: NewMenuModel, token_data: dict):
         self.connect()
-        relational_data = self.utils.transform_dataset(self.get_all_items_ingredients())
+        relational_data = self.transform_dataset(self.get_all_items_ingredients())
         self.close()
         menu_data = {}
         ingredients_data = {}
@@ -82,8 +86,6 @@ class Menu(MenuDatabase):
             for day in item.data:
                 main_dish_data = relational_data.get(day.main_dish)
                 salad_data = relational_data.get(day.salad)
-                side_dish_data = relational_data.get(day.side_dish)
-                accompaniment_data = relational_data.get(day.accompaniment)
 
                 menu_data[item.week_choice][day.weekday] = {
                     "main_dish": {
@@ -104,25 +106,19 @@ class Menu(MenuDatabase):
                             "grocery": salad_data.get("mercearia", []) if salad_data else []
                         }
                     },
-                    "side_dish": {
-                        "dish": day.side_dish,
-                        "ingredients": {
-                            "protein": side_dish_data.get("proteina", []) if side_dish_data else [],
-                            "hortifrutti": side_dish_data.get("hortifruti", []) if side_dish_data else [],
-                            "cold_cuts": side_dish_data.get("frios", []) if side_dish_data else [],
-                            "grocery": side_dish_data.get("mercearia", []) if side_dish_data else []
-                        }
-                    },
-                    "accompaniment": {
-                        "dish": day.accompaniment,
+                    "accompaniment": []
+                }
+                for accompaniment in day.accompaniment:
+                    accompaniment_data = relational_data.get(accompaniment)
+                    menu_data[item.week_choice][day.weekday]["accompaniment"].append({
+                        "dish": accompaniment,
                         "ingredients": {
                             "protein": accompaniment_data.get("proteina", []) if accompaniment_data else [],
                             "hortifrutti": accompaniment_data.get("hortifruti", []) if accompaniment_data else [],
                             "cold_cuts": accompaniment_data.get("frios", []) if accompaniment_data else [],
                             "grocery": accompaniment_data.get("mercearia", []) if accompaniment_data else []
                         }
-                    }
-                }
+                    })
 
         table_data = self.create_table(menu_data, menu_name)
         
@@ -147,7 +143,7 @@ class Menu(MenuDatabase):
         
         return { "success": True, "message": "Menu created successfully" }
         
-
+    @MenuDatabase.log
     def create_table(self, menu_data, menu_name):
         writer = pd.ExcelWriter(f'temp/{ menu_name }.xlsx', engine='xlsxwriter')
         monthly_ingredients = {'protein': set(), 'hortifrutti': set(), 'cold_cuts': set(), 'grocery': set()}
@@ -159,20 +155,22 @@ class Menu(MenuDatabase):
 
                 main_dish = day_data["main_dish"]["dish"]
                 salad = day_data["salad"]["dish"]
-                side_dish = day_data["side_dish"]["dish"]
-                accompaniment = day_data["accompaniment"]["dish"]
+                accompaniment = ", ".join([accompaniment["dish"] for accompaniment in day_data["accompaniment"]])
 
                 main_dish_ingredients = ", ".join(day_data["main_dish"]["ingredients"]["protein"] + day_data["main_dish"]["ingredients"]["hortifrutti"] + day_data["main_dish"]["ingredients"].get("cold_cuts", []) + day_data["main_dish"]["ingredients"].get("grocery", []))
                 salad_ingredients = ", ".join(day_data["salad"]["ingredients"]["protein"] + day_data["salad"]["ingredients"]["hortifrutti"] + day_data["salad"]["ingredients"].get("cold_cuts", []) + day_data["salad"]["ingredients"].get("grocery", []))
-                side_dish_ingredients = ", ".join(day_data["side_dish"]["ingredients"]["protein"] + day_data["side_dish"]["ingredients"]["hortifrutti"] + day_data["side_dish"]["ingredients"].get("cold_cuts", []) + day_data["side_dish"]["ingredients"].get("grocery", []))
-                accompaniment_ingredients = ", ".join(day_data["accompaniment"]["ingredients"]["protein"] + day_data["accompaniment"]["ingredients"]["hortifrutti"] + day_data["accompaniment"]["ingredients"].get("cold_cuts", []) + day_data["accompaniment"]["ingredients"].get("grocery", []))
+                accompaniment_ingredients = ", ".join([", ".join(accompaniment["ingredients"]["protein"] + accompaniment["ingredients"]["hortifrutti"] + accompaniment["ingredients"].get("cold_cuts", []) + accompaniment["ingredients"].get("grocery", [])) for accompaniment in day_data["accompaniment"]])
 
-                table_data.append([self.utils.handle_week_day(weekday), main_dish, salad, side_dish, accompaniment, main_dish_ingredients, salad_ingredients, side_dish_ingredients, accompaniment_ingredients])
+                table_data.append([self.handle_week_day(weekday), main_dish, salad, accompaniment, main_dish_ingredients, salad_ingredients, accompaniment_ingredients])
 
                 for ingredient_type in ['protein', 'hortifrutti', 'cold_cuts', 'grocery']:
-                    monthly_ingredients[ingredient_type].update(day_data["main_dish"]["ingredients"].get(ingredient_type, []) + day_data["salad"]["ingredients"].get(ingredient_type, []) + day_data["side_dish"]["ingredients"].get(ingredient_type, []) + day_data["accompaniment"]["ingredients"].get(ingredient_type, []))
+                    monthly_ingredients[ingredient_type].update(
+                        day_data["main_dish"]["ingredients"].get(ingredient_type, []) 
+                        + day_data["salad"]["ingredients"].get(ingredient_type, []) 
+                        + list(set([ingredient for accompaniment in day_data["accompaniment"] for ingredient in accompaniment["ingredients"].get(ingredient_type, [])]))
+                    )
 
-            columns = ["Dia da Semana", "Prato Principal", "Salada", "Acompanhamento", "Guarnição", "Ingredientes Prato Principal", "Ingredientes Salada", "Ingredientes Acompanhamento", "Ingredientes Guarnição"]
+            columns = ["Dia da Semana", "Prato Principal", "Salada", "Acompanhamento", "Ingredientes Prato Principal", "Ingredientes Salada", "Ingredientes Acompanhamentos"]
             df = pd.DataFrame(table_data, columns=columns)
             df.to_excel(writer, sheet_name=f"Semana {week_choice}", index=False)
 
@@ -183,9 +181,14 @@ class Menu(MenuDatabase):
                 "cold_cuts": set(),
                 "grocery": set(),
             }
+
+            self.logger.info("teste")
             for day_data in week_data.values():
                 for ingredient_type in ['protein', 'hortifrutti', 'cold_cuts', 'grocery']:
-                    week_ingredients[ingredient_type].update(day_data["main_dish"]["ingredients"].get(ingredient_type, []) + day_data["salad"]["ingredients"].get(ingredient_type, []) + day_data["side_dish"]["ingredients"].get(ingredient_type, []) + day_data["accompaniment"]["ingredients"].get(ingredient_type, []))
+                    week_ingredients[ingredient_type].update(
+                        day_data["main_dish"]["ingredients"].get(ingredient_type, [])
+                        + day_data["salad"]["ingredients"].get(ingredient_type, [])
+                        + list(set([ingredient for accompaniment in day_data["accompaniment"] for ingredient in accompaniment["ingredients"].get(ingredient_type, [])])))
 
             week_length = max(len(week_ingredients["protein"]), len(week_ingredients["hortifrutti"]), len(week_ingredients["cold_cuts"]), len(week_ingredients["grocery"]))
             week_proteins = list(week_ingredients["protein"]) + [None] * (week_length - len(week_ingredients["protein"]))
@@ -223,7 +226,7 @@ class Menu(MenuDatabase):
 
         return pd.read_excel(f'temp/{ menu_name }.xlsx', sheet_name=None)
 
-
+    @MenuDatabase.log
     def add_table_from_df(self, df, doc):
         table = doc.add_table(rows=(df.shape[0] + 1), cols=df.shape[1])
         table.style = 'Table Grid'
@@ -250,7 +253,8 @@ class Menu(MenuDatabase):
                 else:
                     cell.text = ''
                 cell.paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-
+    
+    @MenuDatabase.log
     def create_paragraph(self, document, sheet_name, df_week):
         document.add_paragraph().add_run(sheet_name + ":\n").bold = True
         for index, row in df_week.iterrows():
@@ -262,12 +266,11 @@ class Menu(MenuDatabase):
                 day_summary += f", {row['Salada']}"
             if pd.notna(row['Acompanhamento']):
                 day_summary += f", {row['Acompanhamento']}"
-            if pd.notna(row['Guarnição']):
-                day_summary += f", {row['Guarnição']}"
             paragraph = document.add_paragraph()
             paragraph.add_run(day_name + ": ").bold = True
             paragraph.add_run(day_summary)
 
+    @MenuDatabase.log
     def create_docx(self, dataframe: pd.DataFrame, name: str):
         all_sheet_names = dataframe.keys()
 

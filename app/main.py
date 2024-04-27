@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from app.router import menu, user, base, auth
+from app.src.utils import Utils
 
 app = FastAPI(docs_url=None, redoc_url=None)
 app.mount(
@@ -15,3 +16,5 @@ app.include_router(auth.router)
 app.include_router(base.router)
 app.include_router(menu.router)
 app.include_router(user.router)
+
+Utils().logger.info("App started")
