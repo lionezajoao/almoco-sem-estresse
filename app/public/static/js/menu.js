@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             // Clear the form fields
             document.getElementById("main-dish").value = "";
             document.getElementById("salad").value = "";
-            Array.from(document.querySelector("#accompaniment")).forEach(select => select.value = "");
+            Array.from(document.querySelectorAll("#accompaniment")).forEach(select => select.value = "");
 
             // Find the week menu object for the selected week choice
             let weekMenuObj = weekMenu.find(obj => obj.week_choice === weekChoice);
