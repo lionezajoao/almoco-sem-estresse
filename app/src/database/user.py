@@ -10,12 +10,12 @@ class UserDatabase(Database):
         return self.query(query)
 
     def get_user(self, email):
-        query = "SELECT email, name, role FROM users WHERE email = %s"
+        query = "SELECT email, name, role FROM users WHERE LOWER(email) = LOWER(%s)"
         params = (email,)
         return self.query(query, params)
     
     def get_user_password(self, email):
-        query = "SELECT password FROM users WHERE email = %s"
+        query = "SELECT password FROM users WHERE LOWER(email) = LOWER(%s)"
         params = (email,)
         return self.query(query, params)
     
@@ -26,11 +26,11 @@ class UserDatabase(Database):
         return self.insert(query, params)
     
     def update_user_password(self, email, password):
-        query = "UPDATE users SET password = %s WHERE email = %s"
+        query = "UPDATE users SET password = %s WHERE LOWER(email) = LOWER(%s)"
         params = (password, email)
         return self.update(query, params)
 
     def delete_user_by_email(self, email):
-        query = "DELETE FROM users WHERE email = %s;"
+        query = "DELETE FROM users WHERE LOWER(email) = LOWER(%s);"
         params = (email,)
         self.delete(query, params)
