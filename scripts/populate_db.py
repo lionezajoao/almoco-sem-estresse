@@ -41,23 +41,26 @@ def insert_data(db, data):
         db.insert_item(item.name, item.type)
         for ingredient in item.ingredients:
             db.insert_ingredient(ingredient.name, ingredient.type)
-            db.insert_item_ingredient(item.name, ingredient.name)
 
     db.logger.info("Normalizing database...")
-    db.update("UPDATE ingredients SET name = TRIM(TRAILING FROM name);")
     db.update("UPDATE items SET name = TRIM(TRAILING FROM name);")
-    db.logger.info("Database populated successfully!")
+    db.update("UPDATE ingredients SET name = TRIM(TRAILING FROM name);")
+
+    db.logger.info("Inserting item-ingredient relationships...")
+    for item in tqdm(data):
+        for ingredient in item.ingredients:
+            db.insert_item_ingredient(item.name, ingredient.name)
 
 def handle_dataset(df, sheet_name):
 
     data = {}
     for _, row in df.iterrows():
-        protein = row.get('Proteína')
-        mercearia_components = [row[col] for col in df.columns if 'Mercearia Componente' in col]
-        hortifruti_components = [row[col] for col in df.columns if 'Hortifruti Componente' in col]
-        frios_components = [row[col] for col in df.columns if 'Frios Componente' in col]
+        protein = str(row.get('Proteína')).rstrip() if isinstance(row.get('Proteína'), str) else None
+        mercearia_components = [str(row[col]).rstrip() for col in df.columns if 'Mercearia Componente' in col]
+        hortifruti_components = [str(row[col]).rstrip() for col in df.columns if 'Hortifruti Componente' in col]
+        frios_components = [str(row[col]).rstrip() for col in df.columns if 'Frios Componente' in col]
 
-        data[row[sheet_name]] = {
+        data[str(row[sheet_name]).rstrip()] = {
             'protein': protein,
             'mercearia_components': mercearia_components,
             'hortifruti_components': hortifruti_components,
@@ -81,6 +84,7 @@ if __name__ == "__main__":
     except Exception as e:
         db.logger.error(f"Error creating tables, reason: {e}")
         db.close()
+        raise e
 
     for sheet in sheet_names:
         df = pd.read_excel('./temp/base.xlsx', sheet_name=sheet)
@@ -113,9 +117,11 @@ if __name__ == "__main__":
 
     try:
         insert_data(db, menu_items)
+        db.logger.info("Database populated successfully!")
     except Exception as e:
         db.logger.error(f"Error inserting data, reason: {e}")
-        db.close()    
+        db.close()
+        raise e
 
     db.close()
     
