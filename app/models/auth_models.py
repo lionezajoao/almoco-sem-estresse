@@ -26,7 +26,7 @@ class ContactModel(BaseModel):
     address_state: str
     address_country: str
     address_zip_code: str
-    lead: LeadModel
+    lead: Optional[LeadModel] = []
 
 class DatesModel(BaseModel):
     ordered_at: str
@@ -140,20 +140,6 @@ class InvoiceModel(BaseModel):
     created_at: str
 
 class GuruModel(BaseModel):
-    affiliations: List[str]
     api_token: str
-    checkout_url: str
     contact: ContactModel
-    dates: DatesModel
-    ecommerces: List[Dict]
-    id: str
-    last_transaction: List[Dict]
-    payment: PaymentModel
-    product: ProductModel
-    shipment: ShipmentModel
-    shipping: ShippingModel
-    source: SourceModel
-    status: str
-    subscription: SubscriptionModel
-    invoice: InvoiceModel
-    type: str
+    

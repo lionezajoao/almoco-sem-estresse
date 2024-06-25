@@ -41,5 +41,6 @@ def delete_user_by_email(data: UserBase, token_data: dict = Depends(auth.get_cur
     return user.handle_delete_user(data.email, token_data)
 
 @router.post("/guru_webhook")
-def guru_webhook(data: GuruModel, token: bool = Depends(auth.check_guru_token)):
+def guru_webhook(data: dict):
+    auth.check_guru_token(data["api_token"])
     return user.handle_guru_webhook(data)

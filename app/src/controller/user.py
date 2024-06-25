@@ -88,10 +88,14 @@ class UserController:
         raise HTTPException(status_code=401, detail="Unauthorized")
     
     def handle_guru_webhook(self, data: GuruModel):
-        email = data.contact.email
-        name = data.contact.name
-        
-        if self.user.get_user(email):
+        email = data["contact"]["email"]
+        name = data["contact"]["name"]
+
+        self.user.logger.info(f"Handling guru webhook for {email} and {name}...")
+        self.user.connect()
+        user_check = self.user.get_user(email)
+        self.user.close()
+        if user_check:
             raise HTTPException(status_code=400, detail="User already exists")
 
         hashed_password = self.auth.hash_password(self.auth.base_pwd)

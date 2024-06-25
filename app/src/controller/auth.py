@@ -31,7 +31,7 @@ class AuthController(Auth):
     def check_code(self, code: str):
         return self.verify_code(code)
     
-    def check_guru_token(self, token: str = Header(...)):
+    def check_guru_token(self, token: str):
         if not self.verify_guru_token(token):
             raise HTTPException(status_code=401, detail="Invalid token")
     
