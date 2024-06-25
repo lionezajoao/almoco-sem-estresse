@@ -289,7 +289,7 @@ class Menu(MenuDatabase):
             
             df_week = dataframe[sheet_name]
             if sheet_name == "Ingredientes do Mês":
-                doc.add_heading('Resumo do Cardápio Mensal', level=1)
+                doc.add_heading('Ingredientes do Mês', level=1)
                 self.add_table_from_df(df_week, doc)
             elif sheet_name.startswith("Semana"):
                 doc.add_heading('Resumo do Cardápio Semanal', level=1)
