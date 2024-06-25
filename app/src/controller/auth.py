@@ -31,8 +31,8 @@ class AuthController(Auth):
     def check_code(self, code: str):
         return self.verify_code(code)
     
-    def check_hotmart_token(self, x_hotmart_hottok: str = Header(...)):
-        if not self.verify_hotmart_token(x_hotmart_hottok):
+    def check_guru_token(self, token: str = Header(...)):
+        if not self.verify_guru_token(token):
             raise HTTPException(status_code=401, detail="Invalid token")
     
     async def reset_password(self, email: str, password: str):
