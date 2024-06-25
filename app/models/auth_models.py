@@ -1,99 +1,159 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Dict
 
-class AddressModel(BaseModel):
-    country: Optional[str] = None
-    country_iso: Optional[str] = None
-
-class BuyerModel(BaseModel):
-    email: str
+class TrackingModel(BaseModel):
     name: str
-    checkout_phone: Optional[str] = None
-    address: Optional[AddressModel] = None
+    type: str
+    publisher: Optional[str] = None
+    tracked_at: str
 
-class CommissionModel(BaseModel):
-    value: Optional[float] = None
-    source: Optional[str] = None
-    currency_value: Optional[str] = None
+class LeadModel(BaseModel):
+    first_tracking: TrackingModel
+    last_tracking: TrackingModel
 
-class FullPriceModel(BaseModel):
-    value: Optional[float] = None
-    currency_value: Optional[str] = None
+class ContactModel(BaseModel):
+    id: str
+    name: str
+    email: str
+    doc: str
+    phone_number: str
+    phone_local_code: str
+    address: str
+    address_number: str
+    address_comp: Optional[str] = None
+    address_district: str
+    address_city: str
+    address_state: str
+    address_country: str
+    address_zip_code: str
+    lead: LeadModel
 
-class PriceModel(BaseModel):
-    value: Optional[float] = None
-    currency_value: Optional[str] = None
+class DatesModel(BaseModel):
+    ordered_at: str
+    confirmed_at: str
+    expires_at: Optional[str] = None
+    canceled_at: Optional[str] = None
+    warranty_until: str
+    unavailable_until: str
 
-class CheckoutCountryModel(BaseModel):
-    name: Optional[str] = None
-    iso: Optional[str] = None
+class TaxModel(BaseModel):
+    value: float
+    rate: float
 
-class OrderBumpModel(BaseModel):
-    is_order_bump: Optional[bool] = None
-    parent_purchase_transaction: Optional[str] = None
+class InstallmentsModel(BaseModel):
+    value: Optional[str] = None
+    qty: int
+    interest: float
 
-class OriginalOfferPriceModel(BaseModel):
-    value: Optional[float] = None
-    currency_value: Optional[str] = None
+class BilletModel(BaseModel):
+    line: Optional[str] = None
+    url: Optional[str] = None
+    expiration_date: Optional[str] = None
+
+class CreditCardModel(BaseModel):
+    first_digits: str
+    last_digits: str
+    brand: str
+    id: str
 
 class PaymentModel(BaseModel):
-    installments_number: Optional[int] = None
-    type: Optional[str] = None
-
-class OfferModel(BaseModel):
-    code: Optional[str] = None
-
-class PlanModel(BaseModel):
-    id: Optional[int] = None
-    name: Optional[str] = None
-
-class SubscriberModel(BaseModel):
-    code: Optional[str] = None
-
-class ProductModel(BaseModel):
-    id: Optional[int] = None
-    ucode: Optional[str] = None
-    name: Optional[str] = None
-    has_co_production: Optional[bool] = None
-
-class AffiliateModel(BaseModel):
-    affiliate_code: Optional[str] = None
-    name: Optional[str] = None
+    method: Optional[str] = None
+    marketplace_id: str
+    marketplace_name: str
+    marketplace_value: float
+    discount_value: float
+    currency: str
+    total: float
+    affiliate_value: float
+    net: float
+    gross: float
+    tax: TaxModel
+    installments: InstallmentsModel
+    refuse_reason: Optional[str] = None
+    billet: BilletModel
+    credit_card: CreditCardModel
 
 class ProducerModel(BaseModel):
-    name: Optional[str] = None
+    marketplace_id: str
+    name: str
+    contact_email: Optional[str] = None
+
+class ProductModel(BaseModel):
+    id: str
+    internal_id: str
+    name: str
+    unit_value: float
+    image_url: Optional[str] = None
+    total_value: float
+    type: str
+    marketplace_name: str
+    marketplace_id: str
+    qty: int
+    producer: ProducerModel
+
+class ShipmentModel(BaseModel):
+    value: float
+    carrier: str
+    service: str
+    tracking: str
+    delivery_time: int
+    status: List[str]
+
+class ShippingModel(BaseModel):
+    name: str
+    value: float
+
+class SourceModel(BaseModel):
+    source: Optional[str] = None
+    checkout_source: Optional[str] = None
+    utm_source: Optional[str] = None
+    utm_campaign: Optional[str] = None
+    utm_medium: Optional[str] = None
+    utm_content: Optional[str] = None
+    utm_term: Optional[str] = None
+    pptc: List[str]
 
 class SubscriptionModel(BaseModel):
-    status: Optional[str] = None
-    plan: Optional[PlanModel] = None
-    subscriber: Optional[SubscriberModel] = None
+    id: str
+    name: str
+    last_status: str
+    charged_times: int
+    charged_every_days: int
+    started_at: str
+    last_status_at: str
+    canceled_at: Optional[str] = None
+    trial_started_at: Optional[str] = None
+    trial_finished_at: Optional[str] = None
 
-class PurchaseModel(BaseModel):
-    approved_date: Optional[int] = None
-    full_price: Optional[FullPriceModel] = None
-    price: Optional[PriceModel] = None
-    checkout_country: Optional[CheckoutCountryModel] = None
-    order_bump: Optional[OrderBumpModel] = None
-    original_offer_price: Optional[OriginalOfferPriceModel] = None
-    order_date: Optional[int] = None
-    status: Optional[str] = None
-    transaction: Optional[str] = None
-    payment: Optional[PaymentModel] = None
-    offer: Optional[OfferModel] = None
-    sckPaymentLink: Optional[str] = None
+class InvoiceModel(BaseModel):
+    id: str
+    period_start: str
+    period_end: str
+    charge_at: str
+    status: str
+    type: str
+    cycle: int
+    value: float
+    tax_value: float
+    increment_value: float
+    discount_value: float
+    created_at: str
 
-class DataModel(BaseModel):
-    product: Optional[ProductModel] = None
-    affiliates: Optional[List[AffiliateModel]] = None
-    buyer: BuyerModel
-    producer: Optional[ProducerModel] = None
-    commissions: Optional[List[CommissionModel]] = None
-    purchase: Optional[PurchaseModel] = None
-    subscription: Optional[SubscriptionModel] = None
-
-class HotmartModel(BaseModel):
-    id: Optional[str] = None
-    creation_date: Optional[int] = None
-    event: Optional[str] = None
-    version: Optional[str] = None
-    data: DataModel
+class GuruModel(BaseModel):
+    affiliations: List[str]
+    api_token: str
+    checkout_url: str
+    contact: ContactModel
+    dates: DatesModel
+    ecommerces: List[Dict]
+    id: str
+    last_transaction: List[Dict]
+    payment: PaymentModel
+    product: ProductModel
+    shipment: ShipmentModel
+    shipping: ShippingModel
+    source: SourceModel
+    status: str
+    subscription: SubscriptionModel
+    invoice: InvoiceModel
+    type: str

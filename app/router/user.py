@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Header
 
 from app.src.controller.user import UserController
 from app.src.controller.auth import AuthController
-from app.models.auth_models import HotmartModel
+from app.models.auth_models import GuruModel
 from app.models.user_models import UserBase, UserCreate
 
 router = APIRouter(
@@ -40,6 +40,6 @@ def add_new_user(request: UserCreate, token_data: dict = Depends(auth.get_curren
 def delete_user_by_email(data: UserBase, token_data: dict = Depends(auth.get_current_user)):
     return user.handle_delete_user(data.email, token_data)
 
-@router.post("/hotmart_webhook")
-def hotmart_webhook(data: HotmartModel, x_hotmart_hottok: bool = Depends(auth.check_hotmart_token)):
-    return user.handle_hotmart_webhook(data)
+@router.post("/guru_webhook")
+def guru_webhook(data: GuruModel, token: bool = Depends(auth.check_guru_token)):
+    return user.handle_guru_webhook(data)

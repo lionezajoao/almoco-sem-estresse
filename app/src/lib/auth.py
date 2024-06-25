@@ -8,8 +8,6 @@ from app.src.utils import Utils
 from app.src.lib.user import User
 from app.src.lib.email_sender import EmailSender
 
-
-
 class Auth:
     def __init__(self):
         self.user = User()
@@ -18,7 +16,8 @@ class Auth:
         self.salt = bcrypt.gensalt()
         self.token_key = os.environ.get("TOKEN_KEY")
         self.token_secret = os.environ.get("SECRET_KEY")
-        self.hotmart_token = os.environ.get("HOTMART_TOKEN")
+        self.guru_token = os.environ.get("GURU_TOKEN")
+        self.base_pwd = os.environ.get("NEW_USR_PWD")
 
     def hash_password(self, password: str) -> str:
         hashed_password = bcrypt.hashpw(password.encode(), self.salt)
@@ -27,8 +26,8 @@ class Auth:
     def verify_password(self, password: str, hashed_password: str) -> bool:
         return bcrypt.checkpw(password.encode(), hashed_password.encode())
     
-    def verify_hotmart_token(self, token: str) -> bool:
-        return token == self.hotmart_token
+    def verify_guru_token(self, token: str) -> bool:
+        return token == self.guru_token
     
     async def get_user_auth(self, email: str, password: str):
         self.user.connect()
