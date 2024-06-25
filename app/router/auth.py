@@ -3,7 +3,6 @@ from fastapi import APIRouter, HTTPException, Depends, Header
 from fastapi.responses import JSONResponse
 
 from app.src.controller.auth import AuthController
-from app.models.auth_models import HotmartModel
 from app.models.user_models import UserLogin, UserBase
 
 router = APIRouter(
