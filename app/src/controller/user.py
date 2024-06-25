@@ -78,7 +78,7 @@ class UserController:
     
     def handle_delete_user(self, email, token_data):
         if self.user.verify_user_role(token_data.get("email"), token_data.get("role"), self.scope):
-            if self.user.get_user(email):
+            if self.user.get_user_by_email(email):
                 try:
                     self.user.delete_user(email)
                     return JSONResponse(content={"success": True, "message": "User deleted successfully"}, status_code=200)
@@ -90,12 +90,8 @@ class UserController:
     def handle_guru_webhook(self, data: GuruModel):
         email = data["contact"]["email"]
         name = data["contact"]["name"]
-
-        self.user.logger.info(f"Handling guru webhook for {email} and {name}...")
-        self.user.connect()
-        user_check = self.user.get_user(email)
-        self.user.close()
-        if user_check:
+        
+        if self.user.get_user_by_email(email):
             raise HTTPException(status_code=400, detail="User already exists")
 
         hashed_password = self.auth.hash_password(self.auth.base_pwd)
